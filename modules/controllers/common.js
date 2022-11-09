@@ -2,6 +2,90 @@
 
 let collectionManager = require('../managers/common');
 
+let addPlaces = (req, res, next) => {
+    return collectionManager
+        .addPlaces(req)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let getAllPlaces = (req, res, next) => {
+    return collectionManager
+        .getAllPlaces(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let updatePlaces = (req, res, next) => {
+    return collectionManager
+        .updatePlaces(req)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let deletePlaces = (req, res, next) => {
+    return collectionManager
+        .deletePlaces(req.params.id)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////
+
+
+
+
+
+
+
+
+
+
 let getAllColor = (req, res, next) => {
     return collectionManager
         .getAllColor(req.body)
@@ -428,91 +512,95 @@ let getProjectMiniDetailForWebsite = (req, res, next) => {
         .catch(next);
 }
 let getProjectFullDetailForWebsite = (req, res, next) => {
-  return collectionManager
-    .getProjectFullDetailForWebsite(req.body)
-    .then((data) => {
-      let result = {
-        status: 200,
-        data: data,
-      };
-      return res.json(result);
-    })
-    .catch(next);
+    return collectionManager
+        .getProjectFullDetailForWebsite(req.body)
+        .then((data) => {
+            let result = {
+                status: 200,
+                data: data,
+            };
+            return res.json(result);
+        })
+        .catch(next);
 };
 let getSearchResults = (req, res, next) => {
     return collectionManager
-      .getSearchResults(req.body)
-      .then((data) => {
-        let result = {
-          status: 200,
-          data: data,
-        };
-        return res.json(result);
-      })
-      .catch(next);
-  };
-  let getProjectOverViewData = (req, res, next) => {
+        .getSearchResults(req.body)
+        .then((data) => {
+            let result = {
+                status: 200,
+                data: data,
+            };
+            return res.json(result);
+        })
+        .catch(next);
+};
+let getProjectOverViewData = (req, res, next) => {
     return collectionManager
-      .getProjectOverViewData()
-      .then((data) => {
-        let result = {
-          status: 200,
-          data: data,
-        };
-        return res.json(result);
-      })
-      .catch(next);
-  };
-  let setimages = (req, res, next) => {
+        .getProjectOverViewData()
+        .then((data) => {
+            let result = {
+                status: 200,
+                data: data,
+            };
+            return res.json(result);
+        })
+        .catch(next);
+};
+let setimages = (req, res, next) => {
     return collectionManager
-      .setimages()
-      .then((data) => {
-        let result = {
-          status: 200,
-          data: data,
-        };
-        return res.json(result);
-      })
-      .catch(next);
-  };
-  
+        .setimages()
+        .then((data) => {
+            let result = {
+                status: 200,
+                data: data,
+            };
+            return res.json(result);
+        })
+        .catch(next);
+};
+
 module.exports = {
-  getAllProjects,
-  removeProjects,
-  getAllColor,
-  addColor,
-  addProject,
-  getAllThickness,
-  addThickness,
-  getAllWear,
-  getAllLength,
-  addLength,
-  getAllMaterial,
-  addMaterial,
-  addProduct,
-  getAllProjectList,
-  getProduct,
-  getProjectDetail,
-  getProjectMiniDetailForWebsite,
-  getProjectOverViewData,
-  getAllProductCategory,
-  getAllProductSize,
-  getAllSize,
-  getAllFloor,
-  addSize,
-  getAllWearLayer,
-  addWearLayer,
-  getAllPad,
-  addPad,
-  getAllCore,
-  addCore,
-  getAllProductListForSubProduct,
-  addSubProduct,
-  duplicateSubProduct,
-  getSubProduct,
-  getSEODetails,
-  getAllProjectCategoryList,
-  getProjectFullDetailForWebsite,
-  getSearchResults
-  
+    addPlaces: addPlaces,
+    getAllPlaces,
+    updatePlaces,
+    deletePlaces,
+    getAllProjects,
+    removeProjects,
+    getAllColor,
+    addColor,
+    addProject,
+    getAllThickness,
+    addThickness,
+    getAllWear,
+    getAllLength,
+    addLength,
+    getAllMaterial,
+    addMaterial,
+    addProduct,
+    getAllProjectList,
+    getProduct,
+    getProjectDetail,
+    getProjectMiniDetailForWebsite,
+    getProjectOverViewData,
+    getAllProductCategory,
+    getAllProductSize,
+    getAllSize,
+    getAllFloor,
+    addSize,
+    getAllWearLayer,
+    addWearLayer,
+    getAllPad,
+    addPad,
+    getAllCore,
+    addCore,
+    getAllProductListForSubProduct,
+    addSubProduct,
+    duplicateSubProduct,
+    getSubProduct,
+    getSEODetails,
+    getAllProjectCategoryList,
+    getProjectFullDetailForWebsite,
+    getSearchResults
+
 };
