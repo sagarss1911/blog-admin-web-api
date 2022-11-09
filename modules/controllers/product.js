@@ -43,6 +43,24 @@ let ProductManager = require('../managers/product');
  *                 error:
  *                   type: string
 */
+
+
+
+let getAllSubscriber = (req, res, next) => {
+    return ProductManager
+        .getAllSubscriber(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
+
+
 let getAllProduct = (req, res, next) => {
     return ProductManager
         .getAllProduct(req.body)
@@ -84,6 +102,22 @@ let getAllProduct = (req, res, next) => {
  *                 error:
  *                   type: string
 */
+
+
+let removeSubscriber = (req, res, next) => {
+    return ProductManager
+        .removeSubscriber(req.params.slider_id)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
+
 let removeProduct = (req, res, next) => {
     return ProductManager
         .removeProduct(req.params.slider_id)
@@ -176,6 +210,10 @@ let getAllSearchedProduct = (req, res, next) => {
         .catch(next);
 }
 module.exports = {
+    getAllSubscriber,
+    removeSubscriber,
+
+
     getAllProduct,
     removeProduct,
 

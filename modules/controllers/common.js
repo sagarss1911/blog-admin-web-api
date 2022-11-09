@@ -141,7 +141,41 @@ let addMaterial = (req, res, next) => {
         })
         .catch(next);
 }
+
+
+let addSubscriber = (req, res, next) => {
+
+    return collectionManager
+        .addSubscriber(req)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let getSubscriber = (req, res, next) => {
+    return collectionManager
+        .getSubscriber(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
 let addProduct = (req, res, next) => {
+    console.log('c');
     return collectionManager
         .addProduct(req)
         .then(data => {
@@ -165,6 +199,10 @@ let getProduct = (req, res, next) => {
         })
         .catch(next);
 }
+
+
+
+
 let getAllProductCategory = (req, res, next) => {
     return collectionManager
         .getAllProductCategory(req.body)
@@ -428,91 +466,95 @@ let getProjectMiniDetailForWebsite = (req, res, next) => {
         .catch(next);
 }
 let getProjectFullDetailForWebsite = (req, res, next) => {
-  return collectionManager
-    .getProjectFullDetailForWebsite(req.body)
-    .then((data) => {
-      let result = {
-        status: 200,
-        data: data,
-      };
-      return res.json(result);
-    })
-    .catch(next);
+    return collectionManager
+        .getProjectFullDetailForWebsite(req.body)
+        .then((data) => {
+            let result = {
+                status: 200,
+                data: data,
+            };
+            return res.json(result);
+        })
+        .catch(next);
 };
 let getSearchResults = (req, res, next) => {
     return collectionManager
-      .getSearchResults(req.body)
-      .then((data) => {
-        let result = {
-          status: 200,
-          data: data,
-        };
-        return res.json(result);
-      })
-      .catch(next);
-  };
-  let getProjectOverViewData = (req, res, next) => {
+        .getSearchResults(req.body)
+        .then((data) => {
+            let result = {
+                status: 200,
+                data: data,
+            };
+            return res.json(result);
+        })
+        .catch(next);
+};
+let getProjectOverViewData = (req, res, next) => {
     return collectionManager
-      .getProjectOverViewData()
-      .then((data) => {
-        let result = {
-          status: 200,
-          data: data,
-        };
-        return res.json(result);
-      })
-      .catch(next);
-  };
-  let setimages = (req, res, next) => {
+        .getProjectOverViewData()
+        .then((data) => {
+            let result = {
+                status: 200,
+                data: data,
+            };
+            return res.json(result);
+        })
+        .catch(next);
+};
+let setimages = (req, res, next) => {
     return collectionManager
-      .setimages()
-      .then((data) => {
-        let result = {
-          status: 200,
-          data: data,
-        };
-        return res.json(result);
-      })
-      .catch(next);
-  };
-  
+        .setimages()
+        .then((data) => {
+            let result = {
+                status: 200,
+                data: data,
+            };
+            return res.json(result);
+        })
+        .catch(next);
+};
+
 module.exports = {
-  getAllProjects,
-  removeProjects,
-  getAllColor,
-  addColor,
-  addProject,
-  getAllThickness,
-  addThickness,
-  getAllWear,
-  getAllLength,
-  addLength,
-  getAllMaterial,
-  addMaterial,
-  addProduct,
-  getAllProjectList,
-  getProduct,
-  getProjectDetail,
-  getProjectMiniDetailForWebsite,
-  getProjectOverViewData,
-  getAllProductCategory,
-  getAllProductSize,
-  getAllSize,
-  getAllFloor,
-  addSize,
-  getAllWearLayer,
-  addWearLayer,
-  getAllPad,
-  addPad,
-  getAllCore,
-  addCore,
-  getAllProductListForSubProduct,
-  addSubProduct,
-  duplicateSubProduct,
-  getSubProduct,
-  getSEODetails,
-  getAllProjectCategoryList,
-  getProjectFullDetailForWebsite,
-  getSearchResults
-  
+    getAllProjects,
+    removeProjects,
+    getAllColor,
+    addColor,
+    addProject,
+    getAllThickness,
+    addThickness,
+    getAllWear,
+    getAllLength,
+    addLength,
+    getAllMaterial,
+    addMaterial,
+    addProduct,
+    getAllProjectList,
+    getProduct,
+    getProjectDetail,
+    getProjectMiniDetailForWebsite,
+    getProjectOverViewData,
+    getAllProductCategory,
+    getAllProductSize,
+    getAllSize,
+    getAllFloor,
+    addSize,
+    getAllWearLayer,
+    addWearLayer,
+    getAllPad,
+    addPad,
+    getAllCore,
+    addCore,
+    getAllProductListForSubProduct,
+    addSubProduct,
+    duplicateSubProduct,
+    getSubProduct,
+    getSEODetails,
+    getAllProjectCategoryList,
+    getProjectFullDetailForWebsite,
+    getSearchResults,
+
+
+    addSubscriber,
+    getSubscriber
+
 };

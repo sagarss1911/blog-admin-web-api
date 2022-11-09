@@ -14,8 +14,8 @@ let tempSchema = new Schema({
     twitterLink: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
-}, { versionKey: false, collection: 'product' });
-let VIModel = mongoose.model("product", tempSchema);
+}, { versionKey: false, collection: 'subscriber' });
+let VIModel = mongoose.model("subscriber", tempSchema);
 module.exports = VIModel;
 
 

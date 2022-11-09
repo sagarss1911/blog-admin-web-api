@@ -23,8 +23,8 @@ var config = {
   //   host: 'mongodb://localhost',
   //   port: 27017,
   //  },
-   all_south_flooring: {
-    database_name: 'maptia',
+  all_south_flooring: {
+    database_name: 'Maptia',
     host: 'mongodb://localhost',
     port: 27017,
   },
@@ -32,6 +32,9 @@ var config = {
   api_key: "12345",
   upload_folder: "uploads",
   upload_entities: {
+    subscriber_image_folder: "/subscriber_image/",
+
+
     slider_image_folder: "/slider_image/",
     logo_slider_image_folder: "/logo_slider_image/",
     product_image_folder: "/product_image/",
@@ -47,16 +50,16 @@ var config = {
     DIY_image_folder: "/DIY_image/",
     CEU_image_folder: "/CEU_image/",
     room_image_folder: "/rooms/",
-    credit_application_image:"/credit_application/",
-    claim_application_image:"/claim_application/"
+    credit_application_image: "/credit_application/",
+    claim_application_image: "/claim_application/"
   },
-  SENDGRID_API_KEY:"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",
-  from_email: "jess.pickman@allsouthflooring.com ",
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      user: 'jess.pickman@allsouthflooring.com ',
-      pass: 'carolinA2018!@'
+  SENDGRID_API_KEY: "",
+  from_email: "",
+  host: "smtp.gmail.com",
+  port: '',
+  secure: false,
+  user: '',
+  pass: ''
 };
 
 module.exports = config;
