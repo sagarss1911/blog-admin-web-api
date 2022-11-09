@@ -53,7 +53,7 @@ var config = {
   },
   SENDGRID_API_KEY: "",
   from_email: "",
-  host: "smtp.gmail.com",
+  host: "",
   port: 587,
   secure: false,
   user: '',
