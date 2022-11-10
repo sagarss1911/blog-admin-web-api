@@ -3,186 +3,91 @@
 
 let _ = require("lodash"),
     config = process.config.global_config,
-
-    SubscriberModal = require('../models/subscriber'),
-
     BadRequestError = require('../errors/badRequestError'),
-    ProductModel = require('../models/product'),
+    PlaceModal = require('../models/product'),
     ProductCategoryModel = require('../models/product_category'),
     ProductOptionsModal = require('../models/product_options'),
     ObjectId = require('mongoose').Types.ObjectId;
 
 
-
-
-
-let getAllSubscriber = async (body) => {
-    let limit = body.limit ? body.limit : 20,
-        offset = body.page ? ((body.page - 1) * limit) : 0,
-        findData = {};
-    if (body.filters) {
-        if (body.filters.searchtext) {
-            findData["$or"] = [
-                { subscriberName: { $regex: new RegExp(body.filters.searchtext, 'ig') } },
-                { location: { $regex: new RegExp(body.filters.searchtext, 'ig') } },
-
-                // {slug: {$regex: new RegExp(body.filters.searchtext, 'ig')}},
-            ]
-        }
-    }
-    let allProduct = await SubscriberModal.aggregate([
-        { $match: findData },
-        { $skip: offset },
-        { $limit: limit },
-        {
-            $lookup: {
-                from: "product_category",
-                let: { category_ids: "$category" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $in: ["$_id", "$$category_ids"] }
-                        }
-                    },
-                    { $project: { _id: 0, name: 1 } }
-                ],
-                as: "category"
-            }
-        }, {
-            $lookup: {
-                from: "collection",
-                let: { collection_ids: "$collections" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $in: ["$_id", "$$collection_ids"] }
-                        }
-                    },
-                    { $project: { _id: 0, name: 1 } }
-                ],
-                as: "collections"
-            }
-        }
-        , {
-            $lookup: {
-                from: "product_option",
-                let: { master_product_id: "$_id" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $eq: ["$productid", "$$master_product_id"] }
-                        }
-                    },
-                ],
-                as: "products"
-            }
-        }
-    ])
-        .exec()
-
-    allProduct.forEach(element => {
-        element.profileImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
-        element.coverImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.coverImage;
-    });
-
-    let totalRecords = await SubscriberModal.countDocuments(findData);
-
-    let _result = { total_count: 0 };
-    _result.slides = allProduct;
-    _result.total_count = totalRecords;
-    return _result;
-}
-
-
-
-let removeSubscriber = async (id) => {
-
-
-    // await ProductOptionsModal
-    //     .deleteMany({ productid: ObjectId(id) })
-    //     .lean()
-    //     .exec();
-    return await SubscriberModal
-        .deleteOne({ _id: ObjectId(id) })
-        .lean()
-        .exec();
-}
-
-
 let getAllProduct = async (body) => {
-    let limit = body.limit ? body.limit : 20,
+    let limit = body.limit ? body.limit : 10,
         offset = body.page ? ((body.page - 1) * limit) : 0,
         findData = {};
     if (body.filters) {
         if (body.filters.searchtext) {
             findData["$or"] = [
-                { subscriberName: { $regex: new RegExp(body.filters.searchtext, 'ig') } },
-                // {slug: {$regex: new RegExp(body.filters.searchtext, 'ig')}},
+                { placeName: { $regex: new RegExp(body.filters.searchtext, 'ig') } },
+
             ]
         }
     }
-    let allProduct = await ProductModel.aggregate([
-        { $match: findData },
-        { $skip: offset },
-        { $limit: limit },
-        {
-            $lookup: {
-                from: "product_category",
-                let: { category_ids: "$category" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $in: ["$_id", "$$category_ids"] }
-                        }
-                    },
-                    { $project: { _id: 0, name: 1 } }
-                ],
-                as: "category"
-            }
-        }, {
-            $lookup: {
-                from: "collection",
-                let: { collection_ids: "$collections" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $in: ["$_id", "$$collection_ids"] }
-                        }
-                    },
-                    { $project: { _id: 0, name: 1 } }
-                ],
-                as: "collections"
-            }
-        }
-        , {
-            $lookup: {
-                from: "product_option",
-                let: { master_product_id: "$_id" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $eq: ["$productid", "$$master_product_id"] }
-                        }
-                    },
-                ],
-                as: "products"
-            }
-        }
-    ])
+
+
+    let allPlaces = await PlaceModal
+        .find(findData)
+        .sort({ created_at: -1 })
+        .collation({ 'locale': 'en' })
+        .skip(offset)
+        .limit(limit)
+        .select()
+        .lean()
         .exec()
 
-    allProduct.forEach(element => {
-        element.profileImage = config.upload_folder + config.upload_entities.product_image_folder + element.profileImage;
-        element.coverImage = config.upload_folder + config.upload_entities.product_image_folder + element.coverImage;
+    allPlaces.forEach(element => {
+        element.image = config.upload_folder + config.upload_entities.product_image_folder + element.image;
+        element.mapImage = config.upload_folder + config.upload_entities.product_image_folder + element.mapImage;
     });
 
-    let totalRecords = await ProductModel.countDocuments(findData);
+    let totalRecords = await PlaceModal.countDocuments(findData);
 
     let _result = { total_count: 0 };
-    _result.slides = allProduct;
+    _result.places = allPlaces;
     _result.total_count = totalRecords;
     return _result;
 }
+
+
+
+
+// let getAllProduct = async (body) => {
+//     let limit = body.limit ? body.limit : 20,
+//         offset = body.page ? ((body.page - 1) * limit) : 0,
+//         findData = {};
+//     let allPlaces = await PlaceModal
+//         .find(findData)
+//         .sort({ created_at: -1 })
+//         .collation({ 'locale': 'en' })
+//         .skip(offset)
+//         .limit(limit)
+//         .select()
+//         .lean()
+//         .exec()
+
+//     allPlaces.forEach(element => {
+//         element.image = config.upload_folder + config.upload_entities.slider_image_folder + element.image;
+//     });
+
+//     let totalRecords = await PlaceModal.countDocuments();
+//     console.log(allPlaces, totalRecords, "get api");
+//     let _result = { total_count: 0 };
+//     _result.places = allPlaces;
+//     _result.total_count = totalRecords;
+//     return _result;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 let removeProduct = async (id) => {
 
@@ -191,7 +96,7 @@ let removeProduct = async (id) => {
         .deleteMany({ productid: ObjectId(id) })
         .lean()
         .exec();
-    return await ProductModel
+    return await PlaceModal
         .deleteOne({ _id: ObjectId(id) })
         .lean()
         .exec();
@@ -235,7 +140,7 @@ let getAllProductForWebsite = async (body) => {
             sizesfilter = { $in: [body.filters.sizes, "$selectedsize"] }
         }
     }
-    let allProduct = await ProductModel.aggregate([
+    let allProduct = await PlaceModal.aggregate([
         { $match: findData },
         { $skip: offset },
         { $limit: limit },
@@ -293,7 +198,7 @@ let getAllProductForWebsite = async (body) => {
     allProduct = allProduct.filter(ra => ra.products.length > 0);
     allProduct = allProduct.slice(offset, offset + limit);
 
-    let allProductCount = await ProductModel.aggregate([
+    let allProductCount = await PlaceModal.aggregate([
         { $match: findData },
         {
             $lookup: {
@@ -347,10 +252,6 @@ let getAllProductForWebsite = async (body) => {
             element1.image = config.upload_folder + config.upload_entities.product_option_image_folder + element1.image;
         });
     });
-
-
-
-
 
     _result = { total_count: 0 };
     _result.slides = allProduct;
@@ -434,7 +335,7 @@ let getAllSearchedProduct = async (body) => {
         .lean()
         .exec()
     for (var x in allCategory) {
-        allCategory[x].products = await ProductModel.aggregate([
+        allCategory[x].products = await PlaceModal.aggregate([
             { $match: { category: { $in: [ObjectId(allCategory[x]._id)] } } },
             {
                 $lookup: {
@@ -500,7 +401,7 @@ let getAllSearchedProduct = async (body) => {
             sizesfilter = { $in: [body.filters.sizes, "$selectedsize"] }
         }
     }
-    let allProduct = await ProductModel.aggregate([
+    let allProduct = await PlaceModal.aggregate([
         { $match: findData },
         { $sort: { name: 1 } },
         {
@@ -530,7 +431,7 @@ let getAllSearchedProduct = async (body) => {
 
     allProduct = allProduct.slice(offset, offset + limit);
 
-    let allProductCount = await ProductModel.aggregate([
+    let allProductCount = await PlaceModal.aggregate([
         { $match: findData },
         {
             $lookup: {
@@ -569,10 +470,6 @@ let getAllSearchedProduct = async (body) => {
 }
 
 module.exports = {
-
-    getAllSubscriber,
-    removeSubscriber,
-
     getAllProduct,
     removeProduct,
 

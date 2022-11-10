@@ -1,25 +1,135 @@
 'use strict';
 
-const { unset } = require("lodash");
-
 let _ = require("lodash"),
     BadRequestError = require('../errors/badRequestError'),
     config = process.config.global_config,
-
-
-    SubscriberModal = require('../models/subscriber'),
-
-    ProductModal = require('../models/product'),
-    ProductCategoryModal = require('../models/product_category'),
-
-    PrivacyPolicyModal = require('../models/privacy_policy'),
-    TermsConditionModal = require('../models/terms_condition'),
-    ProductOptionsModal = require('../models/product_options'),
-
-
-    CategoryModel = require('../models/category'),
-
+    PlaceModal = require('../models/product'),
     ObjectId = require('mongoose').Types.ObjectId;
+
+let addPlaces = async (req) => {
+    let image;
+    let mapImage;
+    let placeData;
+    let Place
+    let body = req.body.body ? JSON.parse(req.body.body) : req.body;
+    if (!body.placeName || !body.seoTitle || !body.seoDescription || !body.seoKeyword) {
+        throw new BadRequestError('please fill all the details');
+    }
+    if (!body._id) {
+        if (!req.files.image || !req.files.image.length > 0 || !req.files.mapImage || !req.files.mapImage.length > 0) {
+            throw new BadRequestError('please choose image for both place and Map image');
+        }
+        image = req.files.image[0].filename
+        mapImage = req.files.mapImage[0].filename
+        placeData = {
+            placeName: body.placeName,
+            seoTitle: body.seoTitle,
+            seoDescription: body.seoDescription,
+            seoKeyword: body.seoKeyword,
+            active: body.active,
+            image: image,
+            mapImage: mapImage
+
+        }
+        Place = await PlaceModal(placeData).save();
+    }
+    if (body._id) {
+        placeData = {
+            placeName: body.placeName,
+            seoTitle: body.seoTitle,
+            seoDescription: body.seoDescription,
+            seoKeyword: body.seoKeyword,
+            active: body.active,
+            updatedAt: Date.now()
+        }
+        if (req.files.image && req.files.image.length > 0) {
+            image = req.files.image[0].filename
+            placeData.image = image
+        }
+        if (req.files.mapImage && req.files.mapImage.length > 0) {
+            mapImage = req.files.mapImage[0].filename
+            placeData.mapImage = mapImage
+        }
+
+        Place = await PlaceModal
+            .updateOne({ _id: body._id }, { $set: placeData })
+            .exec();
+
+    }
+    return Place;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////
+let getAllPlaces = async (body) => {
+    let limit = body.limit ? body.limit : 20,
+        offset = body.page ? ((body.page - 1) * limit) : 0,
+        findData = {};
+    let allPlaces = await PlaceModal
+        .find(findData)
+        .sort({ createdAt: -1 })
+        .collation({ 'locale': 'en' })
+        .skip(offset)
+        .limit(limit)
+        .select()
+        .lean()
+        .exec()
+
+    // allPlaces.forEach(element => {
+    //     element.image = config.upload_folder + config.upload_entities.slider_image_folder + element.image;
+    // });
+
+    let totalRecords = await PlaceModal.countDocuments();
+    console.log(allPlaces, totalRecords, "get api");
+    let _result = { total_count: 0 };
+    _result.slides = allPlaces;
+    _result.total_count = totalRecords;
+    return _result;
+}
+
+let updatePlaces = async (req) => {
+    let body = req.body.body ? JSON.parse(req.body.body) : req.body;
+    if (!body.placeName || !body.seoTitle || !body.seoDescription || !body.seoKeyword || !body.active) {
+        throw new BadRequestError('please fill all the details');
+    }
+
+    let updateData = {};
+
+
+    if (req.file.image && req.file.mapImage) {
+        updateData["image"] = req.files.image[0].filename;
+    }
+
+
+    let ans = await PlaceModal
+        .updateOne({ _id: ObjectId(req.params.slider_id) }, { $set: updateData })
+        .exec();
+    let slideAdded = await PlaceModal
+        .findOne({ _id: ObjectId(req.params.slider_id) })
+        .lean()
+        .exec();
+    slideAdded.image = config.upload_folder + config.upload_entities.slider_image_folder + slideAdded.image;
+    return slideAdded;
+}
+
+let deletePlaces = async (id) => {
+    return await PlaceModal
+        .deleteOne({ _id: id })
+        .lean()
+        .exec();
+}
+
 
 let addColor = async (body) => {
     if (!body) {
@@ -144,13 +254,11 @@ let getAllMaterial = async (body) => {
         .exec()
 }
 
-
-
 let getProduct = async (body) => {
-    console.log('m');
+
     let findData = { _id: ObjectId(body._id) };
 
-    let allProduct = await ProductModal.aggregate([
+    let allProduct = await PlaceModal.aggregate([
         { $match: findData },
         {
             $lookup: {
@@ -171,22 +279,21 @@ let getProduct = async (body) => {
         .exec()
 
     allProduct.forEach(element => {
-        element.profileImage = config.upload_folder + config.upload_entities.product_image_folder + element.profileImage;
-        element.coverImage = config.upload_folder + config.upload_entities.product_image_folder + element.coverImage;
-    });
-
-    let option_images = []
-
-    if (allProduct[0].option_images && allProduct[0].option_images.length > 0) {
-        allProduct[0].option_images.forEach(element => {
-            option_images.push({ image: config.upload_folder + config.upload_entities.product_image_folder + element, baseimage: element })
-        });
-    }
-    allProduct[0].option_images = option_images;
-    allProduct[0].colors.forEach(element => {
         element.image = config.upload_folder + config.upload_entities.product_image_folder + element.image;
-
+        element.mapImage = config.upload_folder + config.upload_entities.product_image_folder + element.mapImage;
     });
+
+    // let option_images = []
+
+    // if (allProduct[0].option_images && allProduct[0].option_images.length > 0) {
+    //     allProduct[0].option_images.forEach(element => {
+    //         option_images.push({ image: config.upload_folder + config.upload_entities.product_image_folder + element, baseimage: element })
+    //     });
+    // }
+    // allProduct[0].option_images = option_images;
+    // allProduct[0].colors.forEach(element => {
+    //     element.image = config.upload_folder + config.upload_entities.product_image_folder + element.image;
+    // });
 
 
     return allProduct[0];
@@ -297,7 +404,7 @@ let addCore = async (body) => {
 }
 
 let getAllProductListForSubProduct = async (body) => {
-    return await ProductModal
+    return await PlaceModal
         .find()
         .sort({ created_at: -1 })
         .collation({ 'locale': 'en' })
@@ -323,231 +430,67 @@ let getAllProjectList = async (body) => {
         .lean()
         .exec()
 }
-
-
-
 let addProduct = async (req) => {
-    console.log(req.files, "files");
-    let profileImage;
-    let coverImage;
-    let subscriberData;
-    let subscriber;
-    let body = req.body.body ? JSON.parse(req.body.body) : req.body;
-    console.log(body, "reqmanager");
-    if (!body.subscriberName || !body.password || !body.website) {
-        throw new BadRequestError('please fill all the details');
+    let body = JSON.parse(req.body.body);
+    let product_id;
+    //new code
+    let f1;
+
+    let isAvailable = await PlaceModal
+        .findOne({ slug: body.slug })
+        .select()
+        .lean()
+        .exec();
+    if (isAvailable && isAvailable._id != body._id) {
+        throw new BadRequestError("Slug Aready Exist");
+    }
+    let productData = {
+        placeName: body.placeName,
+        // slug: body.slug,
+        collections: Array.isArray(body.collections) ? body.collections : [],
+        // category: Array.isArray(body.category) ? body.category : [],
+        seotitle: body.seotitle,
+        // parentcollection: body.parentcollection,
+        seodescription: body.seodescription,
+        seokeyword: body.seokeyword,
+        active: body.active,
+
+        // videolink: body.videolink
     }
 
-    if (!body._id) {
-        if (!req.files.profileImage || !req.files.profileImage.length > 0 || !req.files.coverImage || !req.files.coverImage.length > 0) {
-            throw new BadRequestError('Please select profile image');
+    let productImage = body.uploaded_files.filter(fl => fl.type == "product").length > 0 ? body.uploaded_files.filter(fl => fl.type == "product")[0].imageactualname : ""
+    if (!productImage && !body._id) {
+        throw new BadRequestError("Product Image can not be blank");
+    } else {
+        f1 = req.files.filter(fl => { return fl.originalname.toString() == productImage.toString() })[0];
+        if (f1) {
+            productData["image"] = f1.filename;
         }
-        profileImage = req.files.profileImage[0].filename
-        coverImage = req.files.coverImage[0].filename
-        subscriberData = {
-            subscriberName: body.subscriberName,
-            password: body.password,
-            shortDescription: body.shortDescription,
-            location: body.location,
-            website: body.website,
-            facebookLink: body.facebookLink,
-            twitterLink: body.twitterLink,
-            profileImage: profileImage,
-            coverImage: coverImage
-        }
-        subscriber = await ProductModal(subscriberData).save();
-        return subscriber
     }
-
-    if (body._id) {
-        if (req.files.profileImage && req.files.profileImage.length > 0) {
-            profileImage = req.files.profileImage[0].filename
-
-            subscriberData = {
-                subscriberName: body.subscriberName,
-                password: body.password,
-                shortDescription: body.shortDescription,
-                location: body.location,
-                website: body.website,
-                facebookLink: body.facebookLink,
-                twitterLink: body.twitterLink,
-                profileImage: profileImage,
-                updatedAt: Date.now()
-            }
-
-        } else if (req.files.coverImage && req.files.coverImage.length > 0) {
-            coverImage = req.files.coverImage[0].filename
-
-            subscriberData = {
-                subscriberName: body.subscriberName,
-                password: body.password,
-                shortDescription: body.shortDescription,
-                location: body.location,
-                website: body.website,
-                facebookLink: body.facebookLink,
-                twitterLink: body.twitterLink,
-                coverImage: coverImage,
-                updatedAt: Date.now()
-            }
-        }
-        else if (!req.files.profileImage || !req.files.profileImage.length > 0 || !req.files.coverImage || !req.files.coverImage.length > 0) {
-            subscriberData = {
-                subscriberName: body.subscriberName,
-                password: body.password,
-                shortDescription: body.shortDescription,
-                location: body.location,
-                website: body.website,
-                facebookLink: body.facebookLink,
-                twitterLink: body.twitterLink,
-                updatedAt: Date.now()
-            }
-        }
-
-        subscriber = await ProductModal
-            .updateOne({ _id: body._id }, { $set: subscriberData })
-            .exec();
-        return subscriber;
-    }
-    return subscriber;
-}
-
-
-
-
-let addSubscriber = async (req) => {
-    let profileImage;
-    let coverImage;
-    let subscriberData;
-    let subscriber;
-    let body = req.body.body ? JSON.parse(req.body.body) : req.body;
-    if (!body.subscriberName || !body.password || !body.website) {
-        throw new BadRequestError('please fill all the details');
-    }
-
-    if (!body._id) {
-        if (!req.files.profileImage || !req.files.profileImage.length > 0 || !req.files.coverImage || !req.files.coverImage.length > 0) {
-            throw new BadRequestError('Please select profile image');
-        }
-        profileImage = req.files.profileImage[0].filename
-        coverImage = req.files.coverImage[0].filename
-        subscriberData = {
-            subscriberName: body.subscriberName,
-            password: body.password,
-            shortDescription: body.shortDescription,
-            location: body.location,
-            website: body.website,
-            facebookLink: body.facebookLink,
-            twitterLink: body.twitterLink,
-            profileImage: profileImage,
-            coverImage: coverImage
-        }
-        subscriber = await SubscriberModal(subscriberData).save();
-        return subscriber
-    }
-
-    if (body._id) {
-        if (req.files.profileImage && req.files.profileImage.length > 0) {
-            profileImage = req.files.profileImage[0].filename
-
-            subscriberData = {
-                subscriberName: body.subscriberName,
-                password: body.password,
-                shortDescription: body.shortDescription,
-                location: body.location,
-                website: body.website,
-                facebookLink: body.facebookLink,
-                twitterLink: body.twitterLink,
-                profileImage: profileImage,
-                updatedAt: Date.now()
-            }
-
-        } else if (req.files.coverImage && req.files.coverImage.length > 0) {
-            coverImage = req.files.coverImage[0].filename
-
-            subscriberData = {
-                subscriberName: body.subscriberName,
-                password: body.password,
-                shortDescription: body.shortDescription,
-                location: body.location,
-                website: body.website,
-                facebookLink: body.facebookLink,
-                twitterLink: body.twitterLink,
-                coverImage: coverImage,
-                updatedAt: Date.now()
-            }
-        }
-        else if (!req.files.profileImage || !req.files.profileImage.length > 0 || !req.files.coverImage || !req.files.coverImage.length > 0) {
-            subscriberData = {
-                subscriberName: body.subscriberName,
-                password: body.password,
-                shortDescription: body.shortDescription,
-                location: body.location,
-                website: body.website,
-                facebookLink: body.facebookLink,
-                twitterLink: body.twitterLink,
-                updatedAt: Date.now()
-            }
-        }
-
-        subscriber = await SubscriberModal
-            .updateOne({ _id: body._id }, { $set: subscriberData })
-            .exec();
-        return subscriber;
-    }
-    return subscriber;
-}
-
-
-
-
-let getSubscriber = async (body) => {
-    let findData = { _id: ObjectId(body._id) };
-
-    let allProduct = await SubscriberModal.aggregate([
-        { $match: findData },
-        {
-            $lookup: {
-                from: "product_option",
-                let: { product_id: "$_id" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $eq: ["$productid", "$$product_id"] }
-                        }
-                    },
-                    { $project: { name: 1, selectedcolor: 1, selectedthickness: 1, selectedlength: 1, selectedmaterial: 1, image: 1 } }
-                ],
-                as: "colors"
-            }
-        }
-    ])
-        .exec()
-
-    allProduct.forEach(element => {
-        element.profileImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
-        element.coverImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.coverImage;
-    });
 
     let option_images = []
-
-    if (allProduct[0].option_images && allProduct[0].option_images.length > 0) {
-        allProduct[0].option_images.forEach(element => {
-            option_images.push({ image: config.upload_folder + config.upload_entities.subscriber_image_folder + element, baseimage: element })
-        });
+    let productOptionImages = body.uploaded_files.filter(fl => fl.type == "productoption")
+    for (const i in productOptionImages) {
+        f1 = req.files.filter(fl => { return fl.originalname.toString() == productOptionImages[i].imageactualname.toString() })[0];
+        f1 ? option_images.push(f1.filename) : ""
     }
-    allProduct[0].option_images = option_images;
-    allProduct[0].colors.forEach(element => {
-        element.image = config.upload_folder + config.upload_entities.subscriber_image_folder + element.image;
 
-    });
-
-
-    return allProduct[0];
+    productData["option_images"] = option_images;
+    productData["option_images"] = productData["option_images"].concat(body.remaining_url)
+    console.log(productData);
+    if (body._id) {
+        //update
+        product_id = body._id;
+        await PlaceModal
+            .updateOne({ _id: ObjectId(product_id) }, { $set: productData })
+            .exec();
+    } else {
+        let savedProduct = await PlaceModal(productData).save();
+        product_id = savedProduct._id;
+        //insert new product
+    }
+    return true;
 }
-
-
-
-
 let duplicateSubProduct = async (req) => {
     let body = req.body;
 
@@ -860,7 +803,7 @@ let getSEODetails = async (body) => {
     }
 
     if (body.page == "subcollection") {
-        SEO = await ProductModal
+        SEO = await PlaceModal
             .findOne({ slug: body.slug })
             .select({ seotitle: 1, seokeyword: 1, seodescription: 1 })
             .lean()
@@ -1207,8 +1150,33 @@ let getProjectOverViewData = async (body) => {
 
     return allCategory;
 }
+// let setimages = async (body) => {
+//     let allCategory = await ProductOptionsModal
+//     .find({})
+//     .sort({ displayorder: 1 })
+//     .collation({ 'locale': 'en' })        
+//     .select()
+//     .lean()
+//     .exec()
+//     for(let i=0;i<allCategory.length;i++){
+//         console.log(i)
+//         let newimage = allCategory[i].image.split(".")[0]+"-small.png";
+//         await ProductOptionsModal
+//         .updateOne({ _id: ObjectId(allCategory[i]._id) }, { $set: {visualiserimage:newimage} })
+//         .exec();
 
+
+//     }
+
+//     return "done";
+// }
 module.exports = {
+
+    addPlaces: addPlaces,
+    getAllPlaces,
+    updatePlaces,
+    deletePlaces,
+    ///////////////////////
     getSearchResults,
     getProjectOverViewData,
     getAllProjects,
@@ -1246,8 +1214,5 @@ module.exports = {
     addProject,
     getProjectFullDetailForWebsite,
     getAllLength,
-    duplicateSubProduct,
-
-    addSubscriber,
-    getSubscriber
+    duplicateSubProduct
 };

@@ -6,15 +6,10 @@ let express = require("express"),
     helper = require("../helpers/fileUpload"),
     authMiddleware = require("../middleware/authValidation");
 
-// router.post('/add_product', authMiddleware.verifyToken, helper.uploadProductImage.any(), controller.addSubscriber);
 
-router.post('/add_subscriber', authMiddleware.verifyToken, helper.uploadSubscriberImage.fields([{ name: 'profileImage' }, { name: 'coverImage' }]), controller.addSubscriber);
-
-router.post('/get_subscriber', authMiddleware.verifyToken, controller.getSubscriber);
-
-////////////////////////////////////////////////////////////
-router.post('/add_product', authMiddleware.verifyToken, helper.uploadProductImage.fields([{ name: 'profileImage' }, { name: 'coverImage' }]), controller.addProduct);
-
+// router.post('/add_product', authMiddleware.verifyToken, helper.uploadProductImage.any(), controller.addProduct);
+router.post('/add_places', authMiddleware.verifyToken, helper.uploadPlaceImage.fields([{ name: 'image' }, { name: 'mapImage' }]), controller.addPlaces);
+router.post('/get_product', authMiddleware.verifyToken, controller.getProduct);
 
 router.post('/get_all_colors', authMiddleware.verifyToken, controller.getAllColor);
 router.post('/add_color', authMiddleware.verifyToken, controller.addColor);
@@ -24,8 +19,8 @@ router.post('/get_all_length', authMiddleware.verifyToken, controller.getAllLeng
 router.post('/add_length', authMiddleware.verifyToken, controller.addLength);
 router.post('/get_all_material', authMiddleware.verifyToken, controller.getAllMaterial);
 router.post('/add_material', authMiddleware.verifyToken, controller.addMaterial);
-
-router.post('/get_product', authMiddleware.verifyToken, controller.getProduct);
+// router.post('/add_product', authMiddleware.verifyToken, helper.uploadProductImage.any(), controller.addProduct);
+// router.post('/get_product', authMiddleware.verifyToken, controller.getProduct);
 router.post('/get_all_product_category', authMiddleware.verifyToken, controller.getAllProductCategory);
 router.post('/get_all_product_size', authMiddleware.verifyToken, controller.getAllProductSize);
 

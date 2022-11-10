@@ -2,6 +2,90 @@
 
 let collectionManager = require('../managers/common');
 
+let addPlaces = (req, res, next) => {
+    return collectionManager
+        .addPlaces(req)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let getAllPlaces = (req, res, next) => {
+    return collectionManager
+        .getAllPlaces(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let updatePlaces = (req, res, next) => {
+    return collectionManager
+        .updatePlaces(req)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let deletePlaces = (req, res, next) => {
+    return collectionManager
+        .deletePlaces(req.params.id)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////
+
+
+
+
+
+
+
+
+
+
 let getAllColor = (req, res, next) => {
     return collectionManager
         .getAllColor(req.body)
@@ -141,40 +225,7 @@ let addMaterial = (req, res, next) => {
         })
         .catch(next);
 }
-
-
-let addSubscriber = (req, res, next) => {
-
-    return collectionManager
-        .addSubscriber(req)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
-let getSubscriber = (req, res, next) => {
-    return collectionManager
-        .getSubscriber(req.body)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////
 let addProduct = (req, res, next) => {
-    console.log('c');
     return collectionManager
         .addProduct(req)
         .then(data => {
@@ -198,10 +249,6 @@ let getProduct = (req, res, next) => {
         })
         .catch(next);
 }
-
-
-
-
 let getAllProductCategory = (req, res, next) => {
     return collectionManager
         .getAllProductCategory(req.body)
@@ -514,6 +561,10 @@ let setimages = (req, res, next) => {
 };
 
 module.exports = {
+    addPlaces: addPlaces,
+    getAllPlaces,
+    updatePlaces,
+    deletePlaces,
     getAllProjects,
     removeProjects,
     getAllColor,
@@ -550,10 +601,6 @@ module.exports = {
     getSEODetails,
     getAllProjectCategoryList,
     getProjectFullDetailForWebsite,
-    getSearchResults,
-
-
-    addSubscriber,
-    getSubscriber
+    getSearchResults
 
 };

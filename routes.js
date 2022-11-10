@@ -7,6 +7,10 @@ module.exports = app => {
     app.get('/', (req, res, next) => {
         return res.status(200).send("Api is Alive V0.1");
     });
+    app.use('/api/common', require('./modules/routes/common'));
+    app.use('/api/place', require('./modules/routes/place'));
+
+    app.use('/api/product', require('./modules/routes/product'));
 
     app.use((req, res, next) => {
         console.log("Request", req.url)
@@ -19,12 +23,6 @@ module.exports = app => {
     app.use('/api/common_settings', require('./modules/routes/common_settings'));
 
     app.use('/api/collection', require('./modules/routes/collection'));
-
-    app.use('/api/common', require('./modules/routes/common'));
-
-    app.use('/api/subscriber', require('./modules/routes/subscriber'));
-
-    app.use('/api/product', require('./modules/routes/product'));
 
     app.use('/api/product_category', require('./modules/routes/product_category'));
 

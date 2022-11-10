@@ -24,7 +24,7 @@ var config = {
   //   port: 27017,
   //  },
   all_south_flooring: {
-    database_name: 'Maptia',
+    database_name: 'maptia',
     host: 'mongodb://localhost',
     port: 27017,
   },
@@ -32,11 +32,9 @@ var config = {
   api_key: "12345",
   upload_folder: "uploads",
   upload_entities: {
-    subscriber_image_folder: "/subscriber_image/",
-
-
     slider_image_folder: "/slider_image/",
     logo_slider_image_folder: "/logo_slider_image/",
+    place_image_folder: "/place_image/",
     product_image_folder: "/product_image/",
     product_option_image_folder: "/product_option_image/",
     category_folder: "/category_image/",
@@ -56,7 +54,7 @@ var config = {
   SENDGRID_API_KEY: "",
   from_email: "",
   host: "smtp.gmail.com",
-  port: '',
+  port: 587,
   secure: false,
   user: '',
   pass: ''
