@@ -28,6 +28,17 @@ let uploadPlaceImage = multer({
 	})
 });
 
+let uploadSubscriberImage = multer({
+	storage: multer.diskStorage({
+		destination: function (req, file, callback) {
+			callback(null, config.upload_folder + config.upload_entities.subscriber_image_folder);
+		},
+		filename: function (req, file, callback) {
+			let fileName = Date.now() + Math.round(Math.random() * 10000) + '.' + mime_type[file.mimetype]
+			callback(null, fileName);
+		}
+	})
+});
 
 let uploadProfileImage = multer({
 	storage: multer.diskStorage({
@@ -221,4 +232,4 @@ let uploadClaimApplicationImage = multer({
 	})
 });
 
-module.exports = { uploadRoomImage, uploadProfileImage, uploadLogoImage, uploadIconImage, uploadCategoryImage, uploadLogoIcon, uploadProductCategoryImage, uploadPlaceImage, uploadProductOptionImage, uploadAboutUsImage, uploadResourceImage, uploadResourcePdf, uploadCollectionImage, uploadDIYImage, uploadCEUImage, uploadCreditApplicationImage, uploadClaimApplicationImage }
+module.exports = { uploadRoomImage, uploadProfileImage, uploadLogoImage, uploadIconImage, uploadCategoryImage, uploadLogoIcon, uploadProductCategoryImage, uploadPlaceImage, uploadProductOptionImage, uploadAboutUsImage, uploadResourceImage, uploadResourcePdf, uploadCollectionImage, uploadDIYImage, uploadCEUImage, uploadCreditApplicationImage, uploadClaimApplicationImage, uploadSubscriberImage }

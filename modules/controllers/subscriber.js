@@ -1,6 +1,6 @@
 'use strict';
 
-let ProductManager = require('../managers/product');
+let SubscriberManager = require('../managers/subscriber');
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ let ProductManager = require('../managers/product');
 
 
 let getAllSubscriber = (req, res, next) => {
-    return ProductManager
+    return SubscriberManager
         .getAllSubscriber(req.body)
         .then(data => {
             let result = {
@@ -62,7 +62,7 @@ let getAllSubscriber = (req, res, next) => {
 
 
 let getAllProduct = (req, res, next) => {
-    return ProductManager
+    return SubscriberManager
         .getAllProduct(req.body)
         .then(data => {
             let result = {
@@ -105,7 +105,7 @@ let getAllProduct = (req, res, next) => {
 
 
 let removeSubscriber = (req, res, next) => {
-    return ProductManager
+    return SubscriberManager
         .removeSubscriber(req.params.slider_id)
         .then(data => {
             let result = {
@@ -119,7 +119,7 @@ let removeSubscriber = (req, res, next) => {
 
 
 let removeProduct = (req, res, next) => {
-    return ProductManager
+    return SubscriberManager
         .removeProduct(req.params.slider_id)
         .then(data => {
             let result = {
@@ -172,9 +172,25 @@ let removeProduct = (req, res, next) => {
  *                 error:
  *                   type: string
 */
-let getAllProductForWebsite = (req, res, next) => {
-    return ProductManager
-        .getAllProductForWebsite(req.body)
+
+
+
+let addSubscriber = (req, res, next) => {
+
+    return SubscriberManager
+        .addSubscriber(req)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let getSubscriber = (req, res, next) => {
+    return SubscriberManager
+        .getSubscriber(req.body)
         .then(data => {
             let result = {
                 status: 200,
@@ -185,40 +201,20 @@ let getAllProductForWebsite = (req, res, next) => {
         .catch(next);
 }
 
-let getAllSubProductForWebsite = (req, res, next) => {
-    return ProductManager
-        .getAllSubProductForWebsite(req.body)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
-let getAllSearchedProduct = (req, res, next) => {
-    return ProductManager
-        .getAllSearchedProduct(req.body)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
+
+
 module.exports = {
     getAllSubscriber,
     removeSubscriber,
+    addSubscriber,
+    getSubscriber,
 
 
     getAllProduct,
     removeProduct,
 
     //Website
-    getAllProductForWebsite,
-    getAllSubProductForWebsite,
-    getAllSearchedProduct
+    // getAllProductForWebsite,
+    // getAllSubProductForWebsite,
+    // getAllSearchedProduct
 }
