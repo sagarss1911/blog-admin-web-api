@@ -22,6 +22,8 @@ module.exports = app => {
 
     app.use('/api/common', require('./modules/routes/common'));
 
+    app.use('/api/subscriber', require('./modules/routes/subscriber'));
+
     app.use('/api/product', require('./modules/routes/product'));
 
     app.use('/api/product_category', require('./modules/routes/product_category'));
