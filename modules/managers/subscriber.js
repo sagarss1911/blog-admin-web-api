@@ -7,9 +7,7 @@ let _ = require("lodash"),
     SubscriberModal = require('../models/subscriber'),
 
     BadRequestError = require('../errors/badRequestError'),
-    ProductModel = require('../models/product'),
-    ProductCategoryModel = require('../models/product_category'),
-    ProductOptionsModal = require('../models/product_options'),
+
     ObjectId = require('mongoose').Types.ObjectId;
 
 
