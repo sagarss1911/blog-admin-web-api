@@ -4,11 +4,11 @@ let SubscriberManager = require('../managers/subscriber');
 
 /**
  * @swagger
- * /api/product/getallproduct:
+ * /api/subscriber/getallsubscriber:
  *   post:
- *     summary: Get All product.
+ *     summary: Get All subscriber.
  *     tags:
- *      - product
+ *      - subscriber
  *     requestBody:
  *       required: true
  *       content:
@@ -25,7 +25,7 @@ let SubscriberManager = require('../managers/subscriber');
  *                 paramType: body
  *     responses:
  *       200:
- *         description: product object
+ *         description: subscriber object
  *         content:
  *           application/json:
  *             schema:
@@ -61,30 +61,18 @@ let getAllSubscriber = (req, res, next) => {
 
 
 
-let getAllProduct = (req, res, next) => {
-    return SubscriberManager
-        .getAllProduct(req.body)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
 
 
 /**
  * @swagger
- * /api/product/remove_product/{slider_id}:
+ * /api/subscriber/remove_subscriber/{slider_id}:
  *   delete:
- *     summary: delete product.
+ *     summary: delete subscriber.
  *     tags:
- *      - product
+ *      - subscriber
  *     responses:
  *       200:
- *         description: product object
+ *         description: subscriber object
  *         content:
  *           application/json:
  *             schema:
@@ -118,26 +106,15 @@ let removeSubscriber = (req, res, next) => {
 }
 
 
-let removeProduct = (req, res, next) => {
-    return SubscriberManager
-        .removeProduct(req.params.slider_id)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
+
 
 /**
  * @swagger
- * /api/product/get_all_product_website:
+ * /api/subscriber/get_all_subscriber_website:
  *   post:
- *     summary: Get All product For Website.
+ *     summary: Get All subscriber For Website.
  *     tags:
- *      - product
+ *      - subscriber
  *     requestBody:
  *       required: true
  *       content:
@@ -154,7 +131,7 @@ let removeProduct = (req, res, next) => {
  *                 paramType: body
  *     responses:
  *       200:
- *         description: product object
+ *         description: subscriber object
  *         content:
  *           application/json:
  *             schema:
@@ -210,11 +187,4 @@ module.exports = {
     getSubscriber,
 
 
-    getAllProduct,
-    removeProduct,
-
-    //Website
-    // getAllProductForWebsite,
-    // getAllSubProductForWebsite,
-    // getAllSearchedProduct
 }

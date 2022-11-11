@@ -46,7 +46,7 @@ let categoryManager = require('../managers/category');
 let addCategory = (req, res, next) => {
 
     return categoryManager
-        .addCategory(req)
+        .addCategory(req.body)
         .then(data => {
             let result = {
                 status: 200,
@@ -165,6 +165,18 @@ let updateCategory = (req, res, next) => {
         .catch(next);
 }
 
+let getCategory = (req, res, next) => {
+    return categoryManager
+        .getCategory(req)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
 /**
  * @swagger
  * /api/category/remove_category/{slider_id}:
@@ -194,7 +206,7 @@ let updateCategory = (req, res, next) => {
 */
 let deleteCategory = (req, res, next) => {
     return categoryManager
-        .deleteCategory(req.params.slider_id)
+        .deleteCategory(req.params.category_id)
         .then(data => {
             let result = {
                 status: 200,
@@ -246,22 +258,12 @@ let deleteCategory = (req, res, next) => {
  *                 error:
  *                   type: string
 */
-let getAllCategoryForWebsite = (req, res, next) => {
-    return categoryManager
-        .getAllCategoryForWebsite()
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
+
 module.exports = {
     addCategory,
     getAllCategory,
+    getCategory,
     updateCategory,
     deleteCategory,
-    getAllCategoryForWebsite
+
 }

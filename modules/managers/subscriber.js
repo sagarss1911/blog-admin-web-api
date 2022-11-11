@@ -7,9 +7,7 @@ let _ = require("lodash"),
     SubscriberModal = require('../models/subscriber'),
 
     BadRequestError = require('../errors/badRequestError'),
-    ProductModel = require('../models/product'),
-    ProductCategoryModel = require('../models/product_category'),
-    ProductOptionsModal = require('../models/product_options'),
+
     ObjectId = require('mongoose').Types.ObjectId;
 
 
@@ -163,55 +161,17 @@ let getAllSubscriber = async (body) => {
             ]
         }
     }
-    let allProduct = await SubscriberModal.aggregate([
-        { $match: findData },
-        { $skip: offset },
-        { $limit: limit },
-        {
-            $lookup: {
-                from: "product_category",
-                let: { category_ids: "$category" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $in: ["$_id", "$$category_ids"] }
-                        }
-                    },
-                    { $project: { _id: 0, name: 1 } }
-                ],
-                as: "category"
-            }
-        }, {
-            $lookup: {
-                from: "collection",
-                let: { collection_ids: "$collections" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $in: ["$_id", "$$collection_ids"] }
-                        }
-                    },
-                    { $project: { _id: 0, name: 1 } }
-                ],
-                as: "collections"
-            }
-        }
-        , {
-            $lookup: {
-                from: "product_option",
-                let: { master_product_id: "$_id" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: { $eq: ["$productid", "$$master_product_id"] }
-                        }
-                    },
-                ],
-                as: "products"
-            }
-        }
-    ])
+    let allProduct = await SubscriberModal.find(findData)
+        .sort({ createdAt: -1 })
+        .collation({ 'locale': 'en' })
+        .skip(offset)
+        .limit(limit)
+        .select()
+        .lean()
         .exec()
+
+
+
 
     allProduct.forEach(element => {
         element.profileImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
@@ -231,10 +191,7 @@ let getAllSubscriber = async (body) => {
 let removeSubscriber = async (id) => {
 
 
-    // await ProductOptionsModal
-    //     .deleteMany({ productid: ObjectId(id) })
-    //     .lean()
-    //     .exec();
+
     return await SubscriberModal
         .deleteOne({ _id: ObjectId(id) })
         .lean()
