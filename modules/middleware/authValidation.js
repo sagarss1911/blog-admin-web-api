@@ -1,51 +1,51 @@
 'use strict';
 
 let _ = require("lodash"),
-    UnauthorizedError = require('../errors/unauthorizedError'),
-    AccessDeniedError = require('../errors/accessDeniedError'),
-    config = process.config.global_config,
-    UsersModel = require('../models/users');;
+	UnauthorizedError = require('../errors/unauthorizedError'),
+	AccessDeniedError = require('../errors/accessDeniedError'),
+	config = process.config.global_config,
+	UsersModel = require('../models/admin');;
 
-let verifyToken = async (req,res,next) => {
+let verifyToken = async (req, res, next) => {
 	let token = req.get('x-auth-token');
-	
-    if (!token) {
-        
+
+	if (!token) {
+
 		return res.json({
-			status:400,
-			data: {msg: "You are not authorized."}
+			status: 400,
+			data: { msg: "You are not authorized." }
 		});
-		
-    }
-	
+
+	}
+
 	let user = await UsersModel
-    .findOne({fpToken:token})
-    .select()
-    .lean()
-    .exec();	
-	if(!user){
+		.findOne({ fpToken: token })
+		.select()
+		.lean()
+		.exec();
+	if (!user) {
 		return res.json({
-			status:400,
-			data: {msg: "You are not authorized."}
+			status: 400,
+			data: { msg: "You are not authorized." }
 		});
-	}else{
+	} else {
 		req.user = {
 			_id: user._id,
 			email: user.email
-		  };
+		};
 		next();
 	}
 }
-let verifyAPIKey = async (req,res,next) => {
-	let APIkey = req.get('x-api-key');	
-    if (!APIkey || APIkey != config.api_key) {
-        
+let verifyAPIKey = async (req, res, next) => {
+	let APIkey = req.get('x-api-key');
+	if (!APIkey || APIkey != config.api_key) {
+
 		return res.json({
-			status:400,
-			data: {msg: "You are not authorized."}
+			status: 400,
+			data: { msg: "You are not authorized." }
 		});
-		
-    }
+
+	}
 	next();
 }
 
