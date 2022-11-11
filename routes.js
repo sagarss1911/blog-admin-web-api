@@ -7,16 +7,13 @@ module.exports = app => {
     app.get('/', (req, res, next) => {
         return res.status(200).send("Api is Alive V0.1");
     });
-    ///API FOR PLACE AND ADMIN
-    app.use('/api/place', require('./modules/routes/place'));
-    app.use('/api/admin-user', require('./modules/routes/admin-users'));
-    app.use('/api/v1/auth', require('./modules/routes/authentication'));
-
-    //API FOR BLOG
-    app.use('/api/blogs', require('./modules/routes/blogs'));
-    ///
-    app.use('/api/product', require('./modules/routes/product'));
     app.use('/api/common', require('./modules/routes/common'));
+    app.use('/api/place', require('./modules/routes/place'));
+
+    app.use('/api/subscriber', require('./modules/routes/subscriber'));
+
+    app.use('/api/product', require('./modules/routes/product'));
+
     app.use((req, res, next) => {
         console.log("Request", req.url)
         next();
@@ -38,8 +35,6 @@ module.exports = app => {
     app.use('/api/term_conditions', require('./modules/routes/term_conditions'));
 
     app.use('/api/footer_website_data', require('./modules/routes/footer_website_data'));
-
-
 
     app.use((req, res, next) => {
         if (res._headerSent) {

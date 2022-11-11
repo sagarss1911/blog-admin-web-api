@@ -7,6 +7,14 @@ let express = require("express"),
     authMiddleware = require("../middleware/authValidation");
 
 //Admin Panle
+router.post('/get_all_subscriber', authMiddleware.verifyToken, controller.getAllSubscriber);
+
+router.delete('/remove_subscriber/:slider_id', authMiddleware.verifyToken, controller.removeSubscriber);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
 router.post('/get_all_product', authMiddleware.verifyToken, controller.getAllProduct);
 router.delete('/remove_product/:slider_id', authMiddleware.verifyToken, controller.removeProduct);
 
@@ -15,5 +23,6 @@ router.post('/get_all_product_website', authMiddleware.verifyAPIKey, controller.
 router.post('/get_all_sub_product_website', authMiddleware.verifyAPIKey, helper.uploadProductOptionImage.any(), controller.getAllSubProductForWebsite);
 router.post('/get_all_searched_product_website', authMiddleware.verifyAPIKey, controller.getAllSearchedProduct);
 module.exports = router;
+
 
 
