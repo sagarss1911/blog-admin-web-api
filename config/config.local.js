@@ -32,6 +32,7 @@ var config = {
   api_key: "12345",
   upload_folder: "uploads",
   upload_entities: {
+    blogs_images_folder: "/blogs_image/",
     slider_image_folder: "/slider_image/",
     logo_slider_image_folder: "/logo_slider_image/",
     place_image_folder: "/place_image/",
