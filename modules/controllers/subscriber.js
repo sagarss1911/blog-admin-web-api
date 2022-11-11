@@ -61,18 +61,7 @@ let getAllSubscriber = (req, res, next) => {
 
 
 
-let getAllProduct = (req, res, next) => {
-    return SubscriberManager
-        .getAllProduct(req.body)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
+
 
 
 /**
@@ -118,18 +107,7 @@ let removeSubscriber = (req, res, next) => {
 }
 
 
-let removeProduct = (req, res, next) => {
-    return SubscriberManager
-        .removeProduct(req.params.slider_id)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
+
 
 /**
  * @swagger
@@ -210,11 +188,7 @@ module.exports = {
     getSubscriber,
 
 
-    getAllProduct,
-    removeProduct,
 
-    //Website
-    // getAllProductForWebsite,
-    // getAllSubProductForWebsite,
-    // getAllSearchedProduct
+
+
 }

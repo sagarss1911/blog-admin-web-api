@@ -6,7 +6,7 @@ let express = require("express"),
     helper = require("../helpers/fileUpload"),
     authMiddleware = require("../middleware/authValidation");
 
-//Admin Panle
+
 
 router.post('/add_subscriber', authMiddleware.verifyToken, helper.uploadSubscriberImage.fields([{ name: 'profileImage' }, { name: 'coverImage' }]), controller.addSubscriber);
 
