@@ -102,7 +102,6 @@ let getAllBlogs = async (body) => {
        let _result = { total_count: 0 };
        _result.slides = allblogs;
        _result.total_count = totalRecords;
-       console.log(_result)
        return _result;
 
 }

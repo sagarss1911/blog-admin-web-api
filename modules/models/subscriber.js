@@ -12,8 +12,8 @@ let tempSchema = new Schema({
     website: { type: String, required: true },
     facebookLink: { type: String, required: true },
     twitterLink: { type: String, required: true },
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 }, { versionKey: false, collection: 'subscriber' });
 let VIModel = mongoose.model("subscriber", tempSchema);
 module.exports = VIModel;

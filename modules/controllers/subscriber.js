@@ -4,11 +4,11 @@ let SubscriberManager = require('../managers/subscriber');
 
 /**
  * @swagger
- * /api/product/getallproduct:
+ * /api/subscriber/getallsubscriber:
  *   post:
- *     summary: Get All product.
+ *     summary: Get All subscriber.
  *     tags:
- *      - product
+ *      - subscriber
  *     requestBody:
  *       required: true
  *       content:
@@ -25,7 +25,7 @@ let SubscriberManager = require('../managers/subscriber');
  *                 paramType: body
  *     responses:
  *       200:
- *         description: product object
+ *         description: subscriber object
  *         content:
  *           application/json:
  *             schema:
@@ -63,17 +63,16 @@ let getAllSubscriber = (req, res, next) => {
 
 
 
-
 /**
  * @swagger
- * /api/product/remove_product/{slider_id}:
+ * /api/subscriber/remove_subscriber/{slider_id}:
  *   delete:
- *     summary: delete product.
+ *     summary: delete subscriber.
  *     tags:
- *      - product
+ *      - subscriber
  *     responses:
  *       200:
- *         description: product object
+ *         description: subscriber object
  *         content:
  *           application/json:
  *             schema:
@@ -95,7 +94,7 @@ let getAllSubscriber = (req, res, next) => {
 
 let removeSubscriber = (req, res, next) => {
     return SubscriberManager
-        .removeSubscriber(req.params.slider_id)
+        .removeSubscriber(req.params.subscriber_id)
         .then(data => {
             let result = {
                 status: 200,
@@ -111,11 +110,11 @@ let removeSubscriber = (req, res, next) => {
 
 /**
  * @swagger
- * /api/product/get_all_product_website:
+ * /api/subscriber/get_all_subscriber_website:
  *   post:
- *     summary: Get All product For Website.
+ *     summary: Get All subscriber For Website.
  *     tags:
- *      - product
+ *      - subscriber
  *     requestBody:
  *       required: true
  *       content:
@@ -132,7 +131,7 @@ let removeSubscriber = (req, res, next) => {
  *                 paramType: body
  *     responses:
  *       200:
- *         description: product object
+ *         description: subscriber object
  *         content:
  *           application/json:
  *             schema:
@@ -186,9 +185,6 @@ module.exports = {
     removeSubscriber,
     addSubscriber,
     getSubscriber,
-
-
-
 
 
 }

@@ -14,7 +14,7 @@ router.post('/get_subscriber', authMiddleware.verifyToken, controller.getSubscri
 
 router.post('/get_all_subscriber', authMiddleware.verifyToken, controller.getAllSubscriber);
 
-router.delete('/remove_subscriber/:slider_id', authMiddleware.verifyToken, controller.removeSubscriber);
+router.delete('/remove_subscriber/:subscriber_id', authMiddleware.verifyToken, controller.removeSubscriber);
 
 module.exports = router;
 /////////////////////////////////////////////////////////////////////////////////////////////
