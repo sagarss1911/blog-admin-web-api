@@ -102,7 +102,7 @@ let addSubscriber = async (req) => {
 let getSubscriber = async (body) => {
     let findData = { _id: ObjectId(body._id) };
 
-    let allProduct = await SubscriberModal.aggregate([
+    let allSubscriber = await SubscriberModal.aggregate([
         { $match: findData },
         {
             $lookup: {
@@ -122,26 +122,26 @@ let getSubscriber = async (body) => {
     ])
         .exec()
 
-    allProduct.forEach(element => {
+    allSubscriber.forEach(element => {
         element.profileImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
         element.coverImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.coverImage;
     });
 
     let option_images = []
 
-    if (allProduct[0].option_images && allProduct[0].option_images.length > 0) {
-        allProduct[0].option_images.forEach(element => {
+    if (allSubscriber[0].option_images && allSubscriber[0].option_images.length > 0) {
+        allSubscriber[0].option_images.forEach(element => {
             option_images.push({ image: config.upload_folder + config.upload_entities.subscriber_image_folder + element, baseimage: element })
         });
     }
-    allProduct[0].option_images = option_images;
-    allProduct[0].colors.forEach(element => {
+    allSubscriber[0].option_images = option_images;
+    allSubscriber[0].colors.forEach(element => {
         element.image = config.upload_folder + config.upload_entities.subscriber_image_folder + element.image;
 
     });
 
 
-    return allProduct[0];
+    return allSubscriber[0];
 }
 
 
@@ -161,7 +161,7 @@ let getAllSubscriber = async (body) => {
             ]
         }
     }
-    let allProduct = await SubscriberModal.find(findData)
+    let allSubscriber = await SubscriberModal.find(findData)
         .sort({ createdAt: -1 })
         .collation({ 'locale': 'en' })
         .skip(offset)
@@ -173,7 +173,7 @@ let getAllSubscriber = async (body) => {
 
 
 
-    allProduct.forEach(element => {
+    allSubscriber.forEach(element => {
         element.profileImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
         element.coverImage = config.upload_folder + config.upload_entities.subscriber_image_folder + element.coverImage;
     });
@@ -181,7 +181,7 @@ let getAllSubscriber = async (body) => {
     let totalRecords = await SubscriberModal.countDocuments(findData);
 
     let _result = { total_count: 0 };
-    _result.slides = allProduct;
+    _result.slides = allSubscriber;
     _result.total_count = totalRecords;
     return _result;
 }

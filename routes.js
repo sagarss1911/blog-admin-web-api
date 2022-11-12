@@ -10,10 +10,11 @@ module.exports = app => {
 
     app.use('/api/v1/auth', require('./modules/routes/authentication'));
 
+    // app.use('/api/common', require('./modules/routes/common'));
     app.use('/api/place', require('./modules/routes/place'));
-
     app.use('/api/subscriber', require('./modules/routes/subscriber'));
-
+    app.use('/api/admin-user', require('./modules/routes/admin-users'));
+    app.use('/api/blogs', require('./modules/routes/blogs'));
     app.use('/api/category', require('./modules/routes/category'));
 
 

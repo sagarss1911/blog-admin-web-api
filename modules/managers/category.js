@@ -11,11 +11,11 @@ let _ = require("lodash"),
 
 
 let addCategory = async (body) => {
-    console.log(body)
+
     let categoryData
 
     if (!body._id) {
-        console.log(body._id, 'add');
+
         categoryData = {
             parentCategoryId: body.parentCategoryId,
             categoryName: body.categoryName,
@@ -29,7 +29,7 @@ let addCategory = async (body) => {
 
     }
     if (body._id) {
-        console.log(body._id, 'update');
+
         let categoryDataUpdate = {
             parentCategoryId: body.parentCategoryId,
             categoryName: body.categoryName,
@@ -49,7 +49,7 @@ let getAllCategory = async (body) => {
         offset = body.page ? ((body.page - 1) * limit) : 0,
         findData = {};
     if (body.filters) {
-        console.log(body)
+
         if (body.filters.searchtext) {
             findData["$or"] = [
                 { categoryName: { $regex: new RegExp(body.filters.searchtext, 'ig') } },
@@ -83,11 +83,11 @@ let getAllCategory = async (body) => {
             },
         ])
         .exec()
-    console.log(allCategory)
+
 
 
     let totalRecords = await CategoryModel.countDocuments(findData);
-    console.log(totalRecords)
+
     let _result = { total_count: 0 };
     _result.slides = allCategory;
     _result.total_count = totalRecords;
@@ -103,13 +103,13 @@ let getCategory = async (req) => {
     let allCategory = await CategoryModel.find(findData).select()
         .lean()
         .exec()
-    console.log(allCategory, "data");
+
     return allCategory;
 }
 
 
 let deleteCategory = async (_id) => {
-    console.log(_id)
+
     await CategoryModel
         .deleteMany({ _id: ObjectId(_id) })
         .lean()

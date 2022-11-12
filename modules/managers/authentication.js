@@ -10,7 +10,7 @@ let _ = require("lodash"),
     path = require('path'),
     config = process.config.global_config,
     validator = require('validator'),
-    UsersModel = require('../models/users');
+    UsersModel = require('../models/admin');
 
 let login = async (body) => {
     if (!body) {

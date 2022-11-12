@@ -94,7 +94,7 @@ let getAllSubscriber = (req, res, next) => {
 
 let removeSubscriber = (req, res, next) => {
     return SubscriberManager
-        .removeSubscriber(req.params.slider_id)
+        .removeSubscriber(req.params.subscriber_id)
         .then(data => {
             let result = {
                 status: 200,
