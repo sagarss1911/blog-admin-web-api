@@ -5,13 +5,13 @@ let mongoose = require("../helpers/asf_mongodb"),
 let tempSchema = new Schema({
     subscriberName: { type: String, required: true },
     password: { type: String, required: true },
-    profileImage: { type: String },
-    coverImage: { type: String },
+    profileImage: { type: String, required: true },
+    coverImage: { type: String, required: true },
     shortDescription: { type: String },
-    location: { type: String },
+    location: { type: String, required: true },
     website: { type: String, required: true },
-    facebookLink: { type: String, required: true },
-    twitterLink: { type: String, required: true },
+    facebookLink: { type: String },
+    twitterLink: { type: String },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 }, { versionKey: false, collection: 'subscriber' });

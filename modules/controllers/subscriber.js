@@ -116,7 +116,7 @@ let removeSubscriber = (req, res, next) => {
  * @swagger
  * /api/subscriber/add_subscriber:
  *   post:
- *     summary: Add subscriber.
+ *     summary: Add or update subscriber in single API. If you want to update a subscriber, enter _id in the _id field or else leave it blank.
  *     tags:
  *      - subscriber
  *     requestBody:
@@ -146,6 +146,9 @@ let removeSubscriber = (req, res, next) => {
  *                 example: ""
  *               coverImage:
  *                 type: file
+ *                 example: ""
+ *               _id:
+ *                 type: string
  *                 example: ""
  *            
  *     responses:
@@ -236,10 +239,11 @@ let getSubscriber = (req, res, next) => {
 
 
 module.exports = {
-    getAllSubscriber,
-    removeSubscriber,
-    addSubscriber,
-    getSubscriber,
+    addSubscriber: addSubscriber,
+    getSubscriber: getSubscriber,
+
+    getAllSubscriber: getAllSubscriber,
+    removeSubscriber: removeSubscriber,
 
 
 }

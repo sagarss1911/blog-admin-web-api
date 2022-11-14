@@ -9,7 +9,7 @@ let _ = require("lodash"),
 
     ObjectId = require('mongoose').Types.ObjectId;
 
-
+//Add-Update Category in single API
 let addCategory = async (body) => {
 
     let categoryData
@@ -25,7 +25,7 @@ let addCategory = async (body) => {
 
         }
 
-        let CategoryAdded = await CategoryModel(categoryData).save();
+        return await CategoryModel(categoryData).save();
 
     }
     if (body._id) {
@@ -44,6 +44,8 @@ let addCategory = async (body) => {
     return categoryData;
 }
 
+
+//Get all categories list
 let getAllCategory = async (body) => {
     let limit = body.limit ? body.limit : 10,
         offset = body.page ? ((body.page - 1) * limit) : 0,
@@ -61,6 +63,7 @@ let getAllCategory = async (body) => {
     let allCategory = await CategoryModel.aggregate(
         [
             { $match: findData },
+            { $sort: { createdAt: -1 } },
             { $skip: offset },
             { $limit: limit },
             {
@@ -89,25 +92,47 @@ let getAllCategory = async (body) => {
     let totalRecords = await CategoryModel.countDocuments(findData);
 
     let _result = { total_count: 0 };
-    _result.slides = allCategory;
+    _result.categoryList = allCategory;
     _result.total_count = totalRecords;
     return _result;
 }
 
 
 
-
+//Get a single category by _id
 let getCategory = async (req) => {
     let body = req.body.body ? JSON.parse(req.body.body) : req.body;
     let findData = { _id: ObjectId(body._id) };
-    let allCategory = await CategoryModel.find(findData).select()
-        .lean()
+    let allCategory = await CategoryModel.aggregate(
+        [
+            { $match: findData },
+
+            {
+                $lookup: {
+                    from: "category",
+                    let: { parentCategoryId: "$parentCategoryId" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$parentCategoryId"] }
+                            }
+                        },
+                        { $project: { categoryName: 1 } }
+
+                    ],
+
+                    as: "parentCategory"
+                }
+
+            },
+        ])
         .exec()
+
 
     return allCategory;
 }
 
-
+//Delete category
 let deleteCategory = async (_id) => {
 
     await CategoryModel
@@ -121,12 +146,10 @@ let deleteCategory = async (_id) => {
 }
 
 
-
-
 module.exports = {
-    getAllCategory,
-    deleteCategory,
-    addCategory,
-    getCategory,
+    getAllCategory: getAllCategory,
+    deleteCategory: deleteCategory,
+    addCategory: addCategory,
+    getCategory: getCategory,
 
 };
