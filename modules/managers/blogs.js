@@ -7,6 +7,7 @@ let _ = require("lodash"),
        blogModel = require('../models/add-blog'),
        ObjectId = require('mongoose').Types.ObjectId;
 
+// for adding blogs
 let addBlogs = async (req) => {
 
        let image;
