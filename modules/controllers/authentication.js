@@ -8,7 +8,7 @@ let authenticationManager = require('../managers/authentication');
  *   post:
  *     summary: User Login.
  *     tags:
- *      - auth
+ *      - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -43,7 +43,6 @@ let authenticationManager = require('../managers/authentication');
  *                   type: string
 */
 let login = (req, res, next) => {
-
     return authenticationManager
         .login(req.body)
         .then(data => {
@@ -54,62 +53,6 @@ let login = (req, res, next) => {
         .catch(next);
 }
 
-/**
- * @swagger
- * /api/v1/auth/reset-password:
- *   post:
- *     summary: Reset Password.
- *     tags:
- *      - auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 example: johndoe@gmail.com
- *               password:
- *                 type: string
- *                 description: new password
- *                 example: password
- *               token:
- *                 type: string
- *                 description: token get in email
- *                 example: token
- *     responses:
- *       200:
- *         description: reset password
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *       400:
- *         description: error in request processing
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
-*/
-let resetPassword = (req, res, next) => {
-
-    return authenticationManager
-        .resetPassword(req.body)
-        .then(data => {
-            return res.json({
-                data: data
-            });
-        })
-        .catch(next);
-}
 
 /**
  * @swagger
@@ -117,7 +60,7 @@ let resetPassword = (req, res, next) => {
  *   post:
  *     summary: logout.
  *     tags:
- *      - auth 
+ *      - Authentication 
  *     responses:
  *       200:
  *         description: logout
@@ -139,7 +82,6 @@ let resetPassword = (req, res, next) => {
  *                   type: string
 */
 let logOut = (req, res, next) => {
-
     return authenticationManager
         .logOut(req.user)
         .then(data => {
@@ -150,7 +92,6 @@ let logOut = (req, res, next) => {
         .catch(next);
 }
 module.exports = {
-    login,
-    resetPassword,
-    logOut
+    login: login,
+    logOut: logOut
 }

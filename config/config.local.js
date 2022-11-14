@@ -24,7 +24,7 @@ var config = {
   //   port: 27017,
   //  },
   all_south_flooring: {
-    database_name: 'Maptia',
+    database_name: 'maptia',
     host: 'mongodb://localhost',
     port: 27017,
   },
@@ -35,6 +35,7 @@ var config = {
     subscriber_image_folder: "/subscriber_image/",
     slider_image_folder: "/slider_image/",
     logo_slider_image_folder: "/logo_slider_image/",
+    blogs_images_folder: "/blogs_image/",
     place_image_folder: "/place_image/",
     product_image_folder: "/product_image/",
     product_option_image_folder: "/product_option_image/",

@@ -1,12 +1,12 @@
 'use strict';
-
-
 let _ = require("lodash"),
     BadRequestError = require('../errors/badRequestError'),
     config = process.config.global_config,
     PlaceModal = require('../models/place'),
     ObjectId = require('mongoose').Types.ObjectId;
 
+
+//ADD-UPDATE ADMIN :If the body contains id it updates the place else adds a new place
 let addPlace = async (req) => {
     let image,
         mapImage,
@@ -30,7 +30,6 @@ let addPlace = async (req) => {
             active: body.active,
             image: image,
             mapImage: mapImage
-
         }
         Place = await PlaceModal(placeData).save();
     }
@@ -51,16 +50,15 @@ let addPlace = async (req) => {
             mapImage = req.files.mapImage[0].filename
             placeData.mapImage = mapImage
         }
-
         Place = await PlaceModal
             .updateOne({ _id: body._id }, { $set: placeData })
             .exec();
-
     }
     return Place;
 }
 
 
+//GET PLACE: fetches the list of places with limit and offset and if the body has filter returns the filtered list. 
 let getAllPlace = async (body) => {
     let limit = body.limit ? body.limit : 20,
         offset = body.page ? ((body.page - 1) * limit) : 0,
@@ -97,33 +95,28 @@ let getAllPlace = async (body) => {
 }
 
 
-
-let getPlace = async (body) => {
-    let findData = { _id: ObjectId(body._id) };
-
+//GET A SINGLE PLACE: fetches the details of the place for the id given
+let getPlace = async (id) => {
+    let findData = { _id: ObjectId(id) };
     let allPlace = await PlaceModal.aggregate([
         { $match: findData }
-
-    ])
-        .exec()
+    ]).exec()
 
     allPlace.forEach(element => {
         element.image = config.upload_folder + config.upload_entities.place_image_folder + element.image;
         element.mapImage = config.upload_folder + config.upload_entities.place_image_folder + element.mapImage;
     });
-
     return allPlace[0];
 }
 
 
-
+//DELETE A PLACE:Deletes the place for the id given 
 let removePlace = async (place_id) => {
     return await PlaceModal
         .deleteOne({ _id: place_id })
         .lean()
         .exec();
 }
-
 
 
 module.exports = {
