@@ -6,26 +6,34 @@ let categoryManager = require('../managers/category');
  * @swagger
  * /api/category/add_category:
  *   post:
- *     summary: Add category.
+ *     summary: Add or update category in single API. If you want to update a category, enter _id in the _id field or else leave it blank.
  *     tags:
- *      - Category Slider
+ *      - Category 
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *        application/json:
  *           schema:
  *             type: object
- *             properties:
- *               image:
- *                 type: file
- *                 example: ""
- *               name:
+ *             properties:  
+ *               categoryName:
  *                 type: string
- *                 example: 12345
- *                 paramType: body
+ *                 example: xyz
+ *               seoTitle:
+ *                 type: string
+ *                 example: xyz
+ *               seoDescription:
+ *                 type: string
+ *                 example: xyz
+ *               seoKeyword:
+ *                 type: string
+ *                 example: xyz
+ *               _id:
+ *                 type: string
+ *                 example: ""
  *     responses:
  *       200:
- *         description: user object
+ *         description: category object
  *         content:
  *           application/json:
  *             schema:
@@ -63,7 +71,7 @@ let addCategory = (req, res, next) => {
  *   post:
  *     summary: Get All Category.
  *     tags:
- *      - Category Slider
+ *      - Category 
  *     requestBody:
  *       required: true
  *       content:
@@ -80,7 +88,7 @@ let addCategory = (req, res, next) => {
  *                 paramType: body
  *     responses:
  *       200:
- *         description: slider object
+ *         description: category object
  *         content:
  *           application/json:
  *             schema:
@@ -111,30 +119,28 @@ let getAllCategory = (req, res, next) => {
         .catch(next);
 }
 
+
+
 /**
  * @swagger
- * /api/category/update_category/{slider_id}:
- *   put:
- *     summary: update category.
+ * /api/category/get_category:
+ *   post:
+ *     summary: get category.
  *     tags:
- *      - Category Slider
+ *      - Category
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               image:
- *                 type: file
- *                 example: ""
- *               name:
+ *               _id:
  *                 type: string
- *                 example: 12345
- *                 paramType: body
+ *                 example: ""
  *     responses:
  *       200:
- *         description: slider object
+ *         description: category object
  *         content:
  *           application/json:
  *             schema:
@@ -152,18 +158,7 @@ let getAllCategory = (req, res, next) => {
  *                 error:
  *                   type: string
 */
-let updateCategory = (req, res, next) => {
-    return categoryManager
-        .updateCategory(req)
-        .then(data => {
-            let result = {
-                status: 200,
-                data: data
-            }
-            return res.json(result);
-        })
-        .catch(next);
-}
+
 
 let getCategory = (req, res, next) => {
     return categoryManager
@@ -179,14 +174,20 @@ let getCategory = (req, res, next) => {
 }
 /**
  * @swagger
- * /api/category/remove_category/{slider_id}:
+ * /api/category/remove_category/{category_id}:
  *   delete:
  *     summary: delete category.
  *     tags:
- *      - Category Slider
+ *      - Category
+ *     parameters:
+ *        - in : path
+ *          name: category_id
+ *     schema:
+ *        type:string
+ *           required:true
  *     responses:
  *       200:
- *         description: slider object
+ *         description: category object
  *         content:
  *           application/json:
  *             schema:
@@ -204,6 +205,7 @@ let getCategory = (req, res, next) => {
  *                 error:
  *                   type: string
 */
+
 let deleteCategory = (req, res, next) => {
     return categoryManager
         .deleteCategory(req.params.category_id)
@@ -217,53 +219,11 @@ let deleteCategory = (req, res, next) => {
         .catch(next);
 }
 
-/**
- * @swagger
- * /api/category/get_all_category_for_website:
- *   post:
- *     summary: Get All Category For Website.
- *     tags:
- *      - Category Slider
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               page:
- *                 type: number
- *                 example: 1
- *               limit:
- *                 type: number
- *                 example: 10
- *                 paramType: body
- *     responses:
- *       200:
- *         description: slider object
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *       400:
- *         description: error in request processing
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
-*/
 
 module.exports = {
-    addCategory,
-    getAllCategory,
-    getCategory,
-    updateCategory,
-    deleteCategory,
+    getAllCategory: getAllCategory,
+    deleteCategory: deleteCategory,
+    addCategory: addCategory,
+    getCategory: getCategory,
 
 }
