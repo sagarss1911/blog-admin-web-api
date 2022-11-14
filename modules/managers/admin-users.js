@@ -4,40 +4,8 @@ let BadRequestError = require('../errors/badRequestError'),
     mongoose = require("../helpers/asf_mongodb"),
     md5 = require('md5');
 
-let login = async (body) => {
-    if (!body) {
-        throw new BadRequestError('Request body comes empty');
-    }
 
-    ['email', 'password'].forEach(x => {
-        if (!body[x]) {
-            throw new BadRequestError(x + " is required");
-        }
-    });
-
-    if (!validator.isEmail(body.email)) {
-        throw new BadRequestError("Email is invalid");
-    }
-    let user = await adminModel
-        .findOne({ email: body.email, password: md5(body.password) })
-        .select()
-        .lean()
-        .exec();
-    if (!user) {
-        throw new BadRequestError("Either username or password is invalid");
-    }
-    await adminModel.updateOne({ _id: user._id }, { "$set": { active: true } })
-    let accessToken = md5(Date.now() + body.email);
-    await adminModel
-        .updateOne({ _id: user._id }, { $set: { fpToken: accessToken, fpTokenCreatedAt: new Date() } })
-        .exec();
-
-    return {
-        userId: user._id,
-        accessToken: accessToken
-    };
-}
-
+//ADD ADMIN: adding a new admin with all the required validations i.e email ,username  should be unique for every new admin
 let createUser = async (user, body) => {
     let createdByuser = user._id;
     ['name', 'email', 'password', 'userName'].forEach(x => {
@@ -60,6 +28,10 @@ let createUser = async (user, body) => {
     return await adminModel(newUser).save()
 };
 
+
+
+
+//fetching the admin list by aggregation on the related fields who id matches with pagination and sorting and if the body has an id fetches and returns the details of that user who's id matches and if the body has filter returns the filtered list.
 let getUsersData = async (admin, body) => {
     if (body._id) {
         let userList = await adminModel.findById({ _id: body._id })
@@ -108,24 +80,23 @@ let getUsersData = async (admin, body) => {
 }
 
 
+//EDIT FOR ADMIN: updates the details for the user for the given id
 let editUser = async (id, body) => {
-    let updateData = {};
-    let optionalFiled = ['name', 'email', 'password', 'userName', "active"];
-    let isAvailable = await adminModel
-        .find({ _id: id })
-        .select()
-        .lean()
-        .exec();
-    optionalFiled.forEach(x => {
-        if (body[x]) {
-            updateData[x] = body[x];
-        }
-    });
+    let updateData = {
+        name: body.name,
+        email: body.email,
+        password: body.password,
+        userName: body.userName,
+        active: body.active
+    };
     await adminModel
         .updateOne({ _id: id }, { $set: updateData })
+        .lean()
         .exec();
 }
 
+
+//DELETE FOR ADMIN:delete the admin for the given id
 let deleteUser = async (id) => {
     return await adminModel
         .deleteOne({ _id: id })
@@ -134,9 +105,8 @@ let deleteUser = async (id) => {
 }
 
 module.exports = {
-    createUser,
-    getUsersData,
-    editUser,
-    deleteUser,
-    login
+    createUser: createUser,
+    getUsersData: getUsersData,
+    editUser: editUser,
+    deleteUser: deleteUser
 } 
