@@ -4,7 +4,7 @@ let SubscriberManager = require('../managers/subscriber');
 
 /**
  * @swagger
- * /api/subscriber/getallsubscriber:
+ * /api/subscriber/get_all_subscriber:
  *   post:
  *     summary: Get All subscriber.
  *     tags:
@@ -62,14 +62,19 @@ let getAllSubscriber = (req, res, next) => {
 
 
 
-
 /**
  * @swagger
- * /api/subscriber/remove_subscriber/{slider_id}:
+ * /api/subscriber/remove_subscriber/{subscriber_id}:
  *   delete:
  *     summary: delete subscriber.
  *     tags:
  *      - subscriber
+ *     parameters:
+ *        - in : path
+ *          name: subscriber_id
+ *     schema:
+ *        type:string
+ *           required:true
  *     responses:
  *       200:
  *         description: subscriber object
@@ -90,7 +95,6 @@ let getAllSubscriber = (req, res, next) => {
  *                 error:
  *                   type: string
 */
-
 
 let removeSubscriber = (req, res, next) => {
     return SubscriberManager
@@ -110,25 +114,43 @@ let removeSubscriber = (req, res, next) => {
 
 /**
  * @swagger
- * /api/subscriber/get_all_subscriber_website:
+ * /api/subscriber/add_subscriber:
  *   post:
- *     summary: Get All subscriber For Website.
+ *     summary: Add or update subscriber in single API. If you want to update a subscriber, enter _id in the _id field or else leave it blank.
  *     tags:
  *      - subscriber
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
- *               page:
- *                 type: number
- *                 example: 1
- *               limit:
- *                 type: number
- *                 example: 10
- *                 paramType: body
+ *               subscriberName:
+ *                 type: string
+ *                 example: xyz
+ *               password:
+ *                 type: string
+ *                 example: xyz
+ *               location:
+ *                 type: string
+ *                 example: xyz
+ *               website:
+ *                 type: string
+ *                 example: xyz
+ *               shortDescription:
+ *                 type: string
+ *                 example: xyz
+ *               profileImage:
+ *                 type: file
+ *                 example: ""
+ *               coverImage:
+ *                 type: file
+ *                 example: ""
+ *               _id:
+ *                 type: string
+ *                 example: ""
+ *            
  *     responses:
  *       200:
  *         description: subscriber object
@@ -151,7 +173,6 @@ let removeSubscriber = (req, res, next) => {
 */
 
 
-
 let addSubscriber = (req, res, next) => {
 
     return SubscriberManager
@@ -165,9 +186,46 @@ let addSubscriber = (req, res, next) => {
         })
         .catch(next);
 }
+
+
+
+/**
+ * @swagger
+ * /api/subscriber/get_subscriber/{subscriber_id}:
+ *   get:
+ *     summary: get subscriber.
+ *     tags:
+ *      - subscriber
+ *     parameters:
+ *        - in : path
+ *          name: subscriber_id
+ *     schema:
+ *        type:string
+ *           required:true
+ *     responses:
+ *       200:
+ *         description: subscriber object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: error in request processing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+*/
+
 let getSubscriber = (req, res, next) => {
     return SubscriberManager
-        .getSubscriber(req.body)
+        .getSubscriber(req.params.subscriber_id)
         .then(data => {
             let result = {
                 status: 200,
@@ -181,10 +239,11 @@ let getSubscriber = (req, res, next) => {
 
 
 module.exports = {
-    getAllSubscriber,
-    removeSubscriber,
-    addSubscriber,
-    getSubscriber,
+    addSubscriber: addSubscriber,
+    getSubscriber: getSubscriber,
+
+    getAllSubscriber: getAllSubscriber,
+    removeSubscriber: removeSubscriber,
 
 
 }

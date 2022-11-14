@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 let mongoose = require("../helpers/asf_mongodb"),
     Schema = mongoose.Schema;
 
