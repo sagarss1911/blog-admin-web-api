@@ -5,63 +5,63 @@
 let constant = "./config/config.local.js";
 process.config.global_config = require(constant);
 
-let express         = require('express'),
-    app             = express(),
-    cors            = require("cors"),
-    responseHandler = require('./modules/middleware/responseHandler'),
-    bodyParser      = require('body-parser'),
-    swaggerJSDoc    = require("swagger-jsdoc"),
-    swaggerUi = require("swagger-ui-express");
+let express = require('express'),
+  app = express(),
+  cors = require("cors"),
+  responseHandler = require('./modules/middleware/responseHandler'),
+  bodyParser = require('body-parser'),
+  swaggerJSDoc = require("swagger-jsdoc"),
+  swaggerUi = require("swagger-ui-express");
 
 console.log('Initializing Server.');
-console.log("Environment: " +process.env.NODE_ENV);
-console.log("Loading Environment Constant: " +constant);
+console.log("Environment: " + process.env.NODE_ENV);
+console.log("Loading Environment Constant: " + constant);
 /**
  * Use morgan to log request using winston logger's `info` stream.
  */
- 
+
 app.use(cors());
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    next();
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
 });
 app.use('/uploads', express.static(__dirname + '/uploads'));
 /**
  * configure app to use bodyParser()
  */
 app.use(bodyParser.urlencoded({
-	limit: '50mb',
-    extended: true,
+  limit: '50mb',
+  extended: true,
 }));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({ limit: '50mb' }));
 
 const docOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'All South Flooring',
-            version: '1',
-        },
-        servers: [{
-          url: process.config.global_config.base_url,
-          description: 'Development server',
-        }],
-        components: {
-          securitySchemes: {
-            ApiKeyAuth: {
-              type: "apiKey",
-              in: "header",     
-              name: "x-auth-token"
-            }
-          }
-        },
-        security: [{
-          ApiKeyAuth: []
-        }]
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'All South Flooring',
+      version: '1',
     },
-    apis: ['./modules/controllers/*.js'],
+    servers: [{
+      url: process.config.global_config.base_url,
+      description: 'Development server',
+    }],
+    components: {
+      securitySchemes: {
+        ApiKeyAuth: {
+          type: "apiKey",
+          in: "header",
+          name: "x-auth-token"
+        }
+      }
+    },
+    security: [{
+      ApiKeyAuth: []
+    }]
+  },
+  apis: ['./modules/controllers/*.js'],
 };
 const swaggerSpec = swaggerJSDoc(docOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -94,8 +94,8 @@ module.exports = app;
  */
 console.log('Ready for requests.');
 let port = Number(process.env.PORT || process.config.global_config.server.port);
-let server = app.listen(port, function() {
-    console.log('server listening on port ' + server.address().port);
+let server = app.listen(port, function () {
+  console.log('server listening on port ' + server.address().port);
 });
 
 server.timeout = process.config.global_config.server.networkCallTimeout;

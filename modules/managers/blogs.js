@@ -7,10 +7,13 @@ let _ = require("lodash"),
        blogModel = require('../models/add-blog'),
        ObjectId = require('mongoose').Types.ObjectId;
 
+// for adding blogs
 let addBlogs = async (req) => {
+
        let image;
        let Blog;
        let body = req.body.body ? JSON.parse(req.body.body) : req.body;
+
        let isAvailable = await blogModel
               .findOne({ slug: body.slug })
               .select()
@@ -56,8 +59,10 @@ let addBlogs = async (req) => {
        return Blog;
 }
 
-let getBlogs = async (body) => {
-       let findData = { _id: ObjectId(body._id) };
+// get blog by Id
+let getBlogs = async (id) => {
+
+       let findData = { _id: ObjectId(id) };
        let allBlogs = await blogModel
               .aggregate([
                      { $match: findData }
@@ -69,6 +74,7 @@ let getBlogs = async (body) => {
        return allBlogs[0];
 }
 
+// get all blogs
 let getAllBlogs = async (body) => {
        let limit = body.limit ? body.limit : 2,
               offset = body.page ? ((body.page - 1) * limit) : 0,
@@ -84,14 +90,73 @@ let getAllBlogs = async (body) => {
                      ]
               }
        }
-       let allblogs = await blogModel.find(findData)
-              .sort({ createdAt: -1 })
-              .collation({ 'locale': 'en' })
-              .skip(offset)
-              .limit(limit)
-              .select()
-              .lean()
-              .exec()
+       let allblogs = await blogModel.aggregate([
+              { $match: findData },
+              { $skip: offset },
+              { $limit: limit },
+              {
+                     $lookup: {
+                            from: "subscriber",
+                            let: { createdBy_id: "$createdBy" },
+                            pipeline: [
+                                   {
+                                          $match: {
+                                                 $expr: { $eq: ["$_id", "$$createdBy_id"] }
+                                          }
+                                   },
+                                   { $project: { subscriberName: 1 } }
+                            ],
+                            as: "createdBy"
+                     }
+              }, {
+                     $lookup: {
+                            from: "subscriber",
+                            let: { imageBy_id: "$imageBy" },
+                            pipeline: [
+                                   {
+                                          $match: {
+                                                 $expr: { $eq: ["$_id", "$$imageBy_id"] }
+                                          }
+                                   },
+                                   { $project: { subscriberName: 1 } }
+                            ],
+                            as: "imageBy"
+                     }
+              }, {
+                     $lookup: {
+                            from: "subscriber",
+                            let: {
+                                   wordsBy_id: "$wordsBy"
+                            },
+                            pipeline: [
+                                   {
+                                          $match: {
+                                                 $expr: { $eq: ["$_id", "$$wordsBy_id"] }
+                                          }
+                                   },
+                                   { $project: { subscriberName: 1 } }
+                            ],
+                            as: "wordsBy"
+                     }
+              },
+              {
+                     $lookup: {
+                            from: "category",
+                            let: {
+                                   category_id: "$categoryIds"
+                            },
+                            pipeline: [
+                                   {
+                                          $match: {
+                                                 $expr: { $in: ["$_id", "$$category_id"] }
+                                          }
+                                   },
+                                   { $project: { categoryName: 1 } }
+                            ],
+                            as: "categoryIds"
+                     }
+              }
+       ]).exec()
 
 
        allblogs.forEach(element => {
@@ -107,6 +172,7 @@ let getAllBlogs = async (body) => {
 }
 // 
 
+// delete bloge 
 let removeBlog = async (id) => {
 
 
