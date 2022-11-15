@@ -59,6 +59,7 @@ let addBlogs = async (req) => {
        return Blog;
 }
 
+// get blog by Id
 let getBlogs = async (id) => {
 
        let findData = { _id: ObjectId(id) };
@@ -73,6 +74,7 @@ let getBlogs = async (id) => {
        return allBlogs[0];
 }
 
+// get all blogs
 let getAllBlogs = async (body) => {
        let limit = body.limit ? body.limit : 2,
               offset = body.page ? ((body.page - 1) * limit) : 0,
@@ -170,6 +172,7 @@ let getAllBlogs = async (body) => {
 }
 // 
 
+// delete bloge 
 let removeBlog = async (id) => {
 
 
