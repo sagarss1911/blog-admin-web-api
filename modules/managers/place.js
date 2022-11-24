@@ -28,6 +28,7 @@ let addPlace = async (req) => {
             seoDescription: body.seoDescription,
             seoKeyword: body.seoKeyword,
             active: body.active,
+            feature: body.feature,
             image: image,
             mapImage: mapImage
         }
@@ -40,6 +41,7 @@ let addPlace = async (req) => {
             seoDescription: body.seoDescription,
             seoKeyword: body.seoKeyword,
             active: body.active,
+            feature: body.feature,
             updatedAt: Date.now()
         }
         if (req.files.image && req.files.image.length > 0) {
@@ -119,9 +121,46 @@ let removePlace = async (place_id) => {
 }
 
 
+let addFeaturePlace = async (body) => {
+    let data; let updateData = {
+        feature: body.feature
+    };
+    if (body.feature == true) {
+        data = "added"
+    }
+    if (body.feature == false) {
+        data = "removed"
+    }
+    await PlaceModal
+        .updateOne({ _id: body._id }, { $set: updateData })
+        .lean()
+        .exec();
+    return data
+}
+
+
+let getFeaturePlace = async (body) => {
+    let allPlaces = await PlaceModal
+        .find({ feature: true })
+        .lean()
+        .exec()
+
+    allPlaces.forEach(element => {
+        element.image = config.upload_folder + config.upload_entities.place_image_folder + element.image;
+        element.mapImage = config.upload_folder + config.upload_entities.place_image_folder + element.mapImage;
+    });
+
+    let _result = { total_count: 0 };
+    _result.places = allPlaces;
+
+    return _result;
+}
+
 module.exports = {
     getAllPlace: getAllPlace,
     removePlace: removePlace,
     addPlace: addPlace,
     getPlace: getPlace,
+    addFeaturePlace: addFeaturePlace,
+    getFeaturePlace: getFeaturePlace
 };
