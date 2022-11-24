@@ -139,6 +139,9 @@ let removePlace = (req, res, next) => {
  *               active:
  *                 type: boolean
  *                 example: 0
+ *               feature:
+ *                 type: boolean
+ *                 example: 0
  *               _id:
  *                 type: string
  *                 example: ""
@@ -221,10 +224,72 @@ let getPlace = (req, res, next) => {
         })
         .catch(next);
 }
-
+/**
+ * @swagger
+ * /api/place/add_featured_places:
+ *   put:
+ *     summary: update place.
+ *     tags:
+ *      - Place
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feature:
+ *                 type: boolean
+ *                 example: 0
+ *     responses:
+ *       200:
+ *         description: place object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: error in request processing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+*/
+let addFeaturePlace = (req, res, next) => {
+    return PlaceManager
+        .addFeaturePlace(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+let getFeaturePlace = (req, res, next) => {
+    return PlaceManager
+        .getFeaturePlace(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
 module.exports = {
     getAllPlace: getAllPlace,
     removePlace: removePlace,
     addPlace: addPlace,
     getPlace: getPlace,
+    addFeaturePlace: addFeaturePlace,
+    getFeaturePlace: getFeaturePlace
 }

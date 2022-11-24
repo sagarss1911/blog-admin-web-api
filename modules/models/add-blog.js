@@ -17,6 +17,7 @@ let tempSchema = new Schema({
     createdBy: Schema.ObjectId,
     imageBy: Schema.ObjectId,
     wordsBy: Schema.ObjectId,
+    feature: { type: Boolean },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 }, { versionKey: false, collection: 'addBlogs' });
