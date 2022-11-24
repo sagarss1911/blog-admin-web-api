@@ -1,10 +1,10 @@
 'use strict';
 
 let express = require("express"),
-    router = express.Router(),
-    controller = require("../controllers/place"),
-    authMiddleware = require("../middleware/authValidation"),
-    helper = require("../helpers/fileUpload");
+       router = express.Router(),
+       controller = require("../controllers/place"),
+       authMiddleware = require("../middleware/authValidation"),
+       helper = require("../helpers/fileUpload");
 //place api
 router.post('/get_all_place', authMiddleware.verifyToken, controller.getAllPlace);
 router.delete('/remove_place/:place_id', authMiddleware.verifyToken, controller.removePlace);

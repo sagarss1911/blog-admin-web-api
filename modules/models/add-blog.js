@@ -12,11 +12,12 @@ let tempSchema = new Schema({
     seoTitle: { type: String },
     seoDescription: { type: String },
     seoKeyword: { type: String },
-    categoryIds: { type: Array, },
+    categoryIds: [Schema.ObjectId],
     highlightCategory: { type: String },
-    createdBy: { type: String },
-    imageBy: { type: String },
-    wordsBy: { type: String },
+    createdBy: Schema.ObjectId,
+    imageBy: Schema.ObjectId,
+    wordsBy: Schema.ObjectId,
+    feature: { type: Boolean },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 }, { versionKey: false, collection: 'addBlogs' });
