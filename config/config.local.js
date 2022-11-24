@@ -28,7 +28,7 @@ var config = {
     host: 'mongodb://localhost',
     port: 27017,
   },
-  base_url: "http://localhost:5000",
+  base_url: "http://localhost:3000",
   api_key: "12345",
   upload_folder: "uploads",
   upload_entities: {
