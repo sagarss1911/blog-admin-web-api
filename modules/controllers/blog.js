@@ -241,11 +241,84 @@ let getBlogs = (req, res, next) => {
               })
               .catch(next);
 }
+
+// add to fav
+let addToFav = (req, res, next) => {
+       return blogmanager
+              .addToFav(req.body)
+              .then(data => {
+                     let result = {
+                            status: 200,
+                            data: data
+                     }
+                     return res.json(result);
+              })
+              .catch(next);
+}
+// add blogbookmark
+let addBookmark = (req, res, next) => {
+       return blogmanager
+              .addBookmark(req.body)
+              .then(data => {
+                     let result = {
+                            status: 200,
+                            data: data
+                     }
+                     return res.json(result);
+              })
+              .catch(next);
+}
+//  for get all fav blogs
+let getFavBlogs = (req, res, next) => {
+       return blogmanager
+              .getFavBlogs(req.params.id)
+              .then(data => {
+                     let result = {
+                            status: 200,
+                            data: data
+                     }
+                     return res.json(result);
+              })
+              .catch(next);
+}
+
+// for get all bookmarks
+let getbookMarkBlogs = (req, res, next) => {
+       return blogmanager
+              .getbookMarkBlogs(req.params.id)
+              .then(data => {
+                     let result = {
+                            status: 200,
+                            data: data
+                     }
+                     return res.json(result);
+              })
+              .catch(next);
+}
+
+// for search
+let search = (req, res, next) => {
+       return blogmanager
+              .search(req.body)
+              .then(data => {
+                     let result = {
+                            status: 200,
+                            data: data
+                     }
+                     return res.json(result);
+              })
+              .catch(next);
+}
 module.exports = {
        addBlogs,
        getAllBlogs,
        removeBlog,
        getBlogs,
+       addToFav,
+       addBookmark,
+       getFavBlogs,
+       getbookMarkBlogs,
+       search
 }
 
 

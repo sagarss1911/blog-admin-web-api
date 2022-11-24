@@ -11,6 +11,7 @@ const placeSchema = mongoose.Schema({
     seoDescription: { type: String, required: true },
     seoKeyword: { type: String, required: true },
     active: { type: Boolean, default: false },
+    feature: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 }, { versionKey: false, collection: 'places' });
