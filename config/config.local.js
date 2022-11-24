@@ -11,7 +11,7 @@ var config = {
    * server configuration
    */
   server: {
-    port: 5000,
+    port: 3000,
     networkCallTimeout: 30000,
   },
   /**
