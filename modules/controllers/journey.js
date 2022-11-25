@@ -1,14 +1,14 @@
 'use strict';
-let PlaceManager = require('../managers/place');
+let journeyManager = require('../managers/journey');
 
 
 /**
  * @swagger
- * /api/place/get_all_place:
+ * /api/JourneyIcon/get_all_JourneyIcon:
  *   post:
- *     summary: Get All places.
+ *     summary: Get All JourneyIcons.
  *     tags:
- *      - Place
+ *      - Journey
  *     requestBody:
  *       required: true
  *       content:
@@ -25,7 +25,7 @@ let PlaceManager = require('../managers/place');
  *                 paramType: body
  *     responses:
  *       200:
- *         description: places object
+ *         description: JourneyIcons object
  *         content:
  *           application/json:
  *             schema:
@@ -43,9 +43,9 @@ let PlaceManager = require('../managers/place');
  *                 error:
  *                   type: string
 */
-let getAllPlace = (req, res, next) => {
-    return PlaceManager
-        .getAllPlace(req.body)
+let getAllJourneyIcon = (req, res, next) => {
+    return journeyManager
+        .getAllJourneyIcon(req.body)
         .then(data => {
             let result = {
                 status: 200,
@@ -59,20 +59,20 @@ let getAllPlace = (req, res, next) => {
 
 /**
  * @swagger
- * /api/place/remove_place/{place_id}:
+ * /api/JourneyIcon/remove_JourneyIcon/{JourneyIcon_id}:
  *   delete:
- *     summary: delete place.
+ *     summary: delete JourneyIcon.
  *     tags:
- *      - Place
+ *      - Journey
  *     parameters:
  *        - in : path
- *          name: place_id
+ *          name: JourneyIcon_id
  *     schema:
  *        type:string
  *           required:true
  *     responses:
  *       200:
- *         description: place object
+ *         description: JourneyIcon object
  *         content:
  *           application/json:
  *             schema:
@@ -90,9 +90,9 @@ let getAllPlace = (req, res, next) => {
  *                 error:
  *                   type: string
 */
-let removePlace = (req, res, next) => {
-    return PlaceManager
-        .removePlace(req.params.place_id)
+let removeJourneyIcon = (req, res, next) => {
+    return journeyManager
+        .removeJourneyIcon(req.params.icon_id)
         .then(data => {
             let result = {
                 status: 200,
@@ -106,11 +106,11 @@ let removePlace = (req, res, next) => {
 
 /**
  * @swagger
- * /api/place/add_places:
+ * /api/JourneyIcon/add_JourneyIcons:
  *   post:
- *     summary: Add or update Place in one API. if you want to update a place , add the id of that place in id field or else keep it empty
+ *     summary: Add or update JourneyIcon in one API. if you want to update a JourneyIcon , add the id of that JourneyIcon in id field or else keep it empty
  *     tags:
- *      - Place
+ *      - Journey
  *     requestBody:
  *       required: true
  *       content:
@@ -118,12 +118,6 @@ let removePlace = (req, res, next) => {
  *           schema:
  *             type: object
  *             properties:
- *               placeName:
- *                 type: string
- *                 example: xyz
- *               seoTitle:
- *                 type: string
- *                 example: xyz
  *               seoDescription:
  *                 type: string
  *                 example: xyz
@@ -147,7 +141,7 @@ let removePlace = (req, res, next) => {
  *                 example: ""
  *     responses:
  *       200:
- *         description: place object
+ *         description: JourneyIcon object
  *         content:
  *           application/json:
  *             schema:
@@ -165,9 +159,9 @@ let removePlace = (req, res, next) => {
  *                 error:
  *                   type: string
 */
-let addPlace = (req, res, next) => {
-    return PlaceManager
-        .addPlace(req)
+let addJourneyIcon = (req, res, next) => {
+    return journeyManager
+        .addJourneyIcon(req)
         .then(data => {
             let result = {
                 status: 200,
@@ -181,20 +175,20 @@ let addPlace = (req, res, next) => {
 
 /**
  * @swagger
- * /api/place/get_place/{place_id}:
+ * /api/JourneyIcon/get_JourneyIcon/{JourneyIcon_id}:
  *   get:
- *     summary: get place.
+ *     summary: get JourneyIcon.
  *     tags:
- *      - Place
+ *      - Journey
  *     parameters:
  *        - in : path
- *          name: place_id
+ *          name: JourneyIcon_id
  *     schema:
  *        typ   e:string
  *           required:true
  *     responses:
  *       200:
- *         description: place object
+ *         description: JourneyIcon object
  *         content:
  *           application/json:
  *             schema:
@@ -212,9 +206,9 @@ let addPlace = (req, res, next) => {
  *                 error:
  *                   type: string
 */
-let getPlace = (req, res, next) => {
-    return PlaceManager
-        .getPlace(req.params.id)
+let getJourneyIcon = (req, res, next) => {
+    return journeyManager
+        .getJourneyIcon(req.params.id)
         .then(data => {
             let result = {
                 status: 200,
@@ -224,26 +218,77 @@ let getPlace = (req, res, next) => {
         })
         .catch(next);
 }
+
+
+
+
+// cards
+
+
 /**
  * @swagger
- * /api/place/add_featured_places:
- *   put:
- *     summary: update place.
+ * /api/journey/get_journey_cards_details:
+ *   post:
+ *     summary: get Journey Card cards with pagination and filter
  *     tags:
- *      - Place
+ *      - Journey
+ *     responses:
+ *       200:
+ *         description: Journey Card card object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: error in request processing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+*/
+let getJourneyCardsDetails = (req, res, next) => {
+    return journeyManager
+        .getJourneyCardsDetails(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
+
+
+
+
+/**
+ * @swagger
+ * /api/journey/add_journey:
+ *   post:
+ *     summary: Add or update Journey Card card in one API. if you want to update a Journey , add the id of that object in id field or else keep it empty
+ *     tags:
+ *      - Journey
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *          multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
- *               feature:
- *                 type: boolean
- *                 example: 0
+ *               cardDescription:
+ *                 type: string
+ *                 example: xyz 
  *     responses:
  *       200:
- *         description: place object
+ *         description: card object
  *         content:
  *           application/json:
  *             schema:
@@ -261,9 +306,9 @@ let getPlace = (req, res, next) => {
  *                 error:
  *                   type: string
 */
-let addFeaturePlace = (req, res, next) => {
-    return PlaceManager
-        .addFeaturePlace(req.body)
+let addJourneyCard = (req, res, next) => {
+    return journeyManager
+        .addJourneyCard(req.body)
         .then(data => {
             let result = {
                 status: 200,
@@ -273,9 +318,44 @@ let addFeaturePlace = (req, res, next) => {
         })
         .catch(next);
 }
-let getFeaturePlace = (req, res, next) => {
-    return PlaceManager
-        .getFeaturePlace(req.body)
+
+
+/**
+ * @swagger
+ * /api/journey/get_journey_cards/{Journey_id}:
+ *   get:
+ *     summary: get Journey.
+ *     tags:
+ *      - Journey
+ *     parameters:
+ *        - in : path
+ *          name: Journey_id
+ *     schema:
+ *        type:string
+ *           required:true
+ *     responses:
+ *       200:
+ *         description: Journey Card object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: error in request processing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+*/
+let getJourneyCard = (req, res, next) => {
+    return journeyManager
+        .getJourneyCard(req.params.card_id)
         .then(data => {
             let result = {
                 status: 200,
@@ -285,11 +365,62 @@ let getFeaturePlace = (req, res, next) => {
         })
         .catch(next);
 }
+
+
+/**
+ * @swagger
+ * /api/journey/delete_journey_cards/{Journey_id}:
+ *   delete:
+ *     summary: delete Journey Card.
+ *     tags:
+ *      - Journey
+ *     parameters:
+ *        - in : path
+ *          name: Journey_id
+ *     schema:
+ *        type:string
+ *           required:true
+ *     responses:
+ *       200:
+ *         description: Journey Card object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: error in request processing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+*/
+let deleteJourneyCard = (req, res, next) => {
+    return journeyManager
+        .deleteJourneyCard(req.params.card_id)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
 module.exports = {
-    getAllPlace: getAllPlace,
-    removePlace: removePlace,
-    addPlace: addPlace,
-    getPlace: getPlace,
-    addFeaturePlace: addFeaturePlace,
-    getFeaturePlace: getFeaturePlace
+    addJourneyIcon: addJourneyIcon,
+    getAllJourneyIcon: getAllJourneyIcon,
+    removeJourneyIcon: removeJourneyIcon,
+    getJourneyIcon: getJourneyIcon,
+    //cards api
+    addJourneyCard: addJourneyCard,
+    deleteJourneyCard: deleteJourneyCard,
+    getJourneyCard: getJourneyCard,
+    getJourneyCardsDetails: getJourneyCardsDetails,
 }
