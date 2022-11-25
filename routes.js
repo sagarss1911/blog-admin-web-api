@@ -21,6 +21,11 @@ module.exports = app => {
 
     app.use('/api/blogs', require('./modules/routes/blogs'));
 
+    app.use('/api/user_register', require('./modules/routes/user_register'));
+
+    app.use('/api/change_icon', require('./modules/routes/change_icon'));
+
+
     app.use((req, res, next) => {
         console.log("Request", req.url)
         next();

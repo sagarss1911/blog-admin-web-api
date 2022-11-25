@@ -10,4 +10,5 @@ router.post('/get_users_list', authMiddleware.verifyToken, controller.getUsersDa
 router.put('/edit_user/:id', authMiddleware.verifyToken, controller.editUser);
 router.delete('/delete_user/:id', authMiddleware.verifyToken, controller.deleteUser);
 
+
 module.exports = router;

@@ -142,9 +142,9 @@ let removeSubscriber = async (id) => {
 }
 
 module.exports = {
-    addSubscriber:addSubscriber,
-    getSubscriber:getSubscriber,
+    addSubscriber: addSubscriber,
+    getSubscriber: getSubscriber,
 
-    getAllSubscriber:getAllSubscriber,
-    removeSubscriber:removeSubscriber,
+    getAllSubscriber: getAllSubscriber,
+    removeSubscriber: removeSubscriber,
 };

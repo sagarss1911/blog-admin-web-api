@@ -32,7 +32,9 @@ var config = {
   api_key: "12345",
   upload_folder: "uploads",
   upload_entities: {
+    icon_image_folder: "/icon_image/",
     subscriber_image_folder: "/subscriber_image/",
+    user_image_folder: "/user_image/",
     slider_image_folder: "/slider_image/",
     logo_slider_image_folder: "/logo_slider_image/",
     blogs_images_folder: "/blogs_image/",

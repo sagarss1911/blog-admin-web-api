@@ -45,6 +45,7 @@ let addCategory = async (body) => {
 }
 
 
+
 //Get all categories list
 let getAllCategory = async (body) => {
     let limit = body.limit ? body.limit : 10,
