@@ -20,9 +20,15 @@ module.exports = app => {
     app.use('/api/category', require('./modules/routes/category'));
 
     app.use('/api/blogs', require('./modules/routes/blogs'));
+
     app.use('/api/about_us', require('./modules/routes/about-us'));
 
+    app.use('/api/user_register', require('./modules/routes/user_register'));
+
+    app.use('/api/change_icon', require('./modules/routes/change_icon'));
+
     app.use('/api/journey', require('./modules/routes/journey'));
+
     app.use((req, res, next) => {
         console.log("Request", req.url)
         next();
