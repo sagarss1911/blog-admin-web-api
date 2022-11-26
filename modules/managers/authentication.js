@@ -17,7 +17,8 @@ let _ = require("lodash"),
 
 
 let login = async (body) => {
-    let userId;;
+    let userId;
+    let userType;
     if (!body) {
         throw new BadRequestError('Request body comes empty');
     }
@@ -50,18 +51,21 @@ let login = async (body) => {
             .updateOne({ _id: admin._id }, { $set: { fpToken: accessToken, fpTokenCreatedAt: new Date() } })
             .exec();
         userId = admin._id
+        userType = "isAdmin"
     }
     if (user) {
         await UserRegisterModal
             .updateOne({ _id: user._id }, { $set: { fpToken: accessToken, fpTokenCreatedAt: new Date() } })
             .exec();
         userId = user._id
+        userType = "isUser"
     }
     return {
         userId: userId,
         accessToken: accessToken,
         admin: admin,
-        user: user
+        user: user,
+        userType: userType
     };
 }
 
