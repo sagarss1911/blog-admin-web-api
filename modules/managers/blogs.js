@@ -98,6 +98,7 @@ let getBlogs = async (id) => {
                                    as: "categoryIds"
                             }
                      }
+
               ])
               .exec()
        allBlogs.forEach(element => {
@@ -296,7 +297,7 @@ let getAllBlogs = async (body) => {
        return _result;
 
 }
-// 
+//
 
 // delete bloge 
 let removeBlog = async (id) => {
@@ -354,7 +355,7 @@ let addToFav = async (body) => {
 }
 // add to blog
 let addBookmark = async (body) => {
-
+       console.log(body);
 
 
 
@@ -362,7 +363,7 @@ let addBookmark = async (body) => {
 
        let findblog = await bookMark.findOne({ blogId: ObjectId(body.blogId), userId: ObjectId(body.userId) })
 
-
+       console.log(findblog);
 
        if (findblog) {
               let Blog = await bookMark
@@ -379,7 +380,11 @@ let addBookmark = async (body) => {
 
               }
               Blog = await bookMark(blogData).save();
-              return Blog, "added";
+              console.log(Blog, "hello");
+              let _result = { total_count: 0 };
+              _result.slides = Blog;
+
+              return _result;
        }
 }
 
@@ -387,7 +392,7 @@ let addBookmark = async (body) => {
 // get all fav
 let getFavBlogs = async (id) => {
 
-       let findblog = await favBlogs.find({ userId: ObjectId(id) })
+       // let findblog = await favBlogs.find({ userId: ObjectId(id) })
 
 
        let allblogs = await favBlogs.aggregate([
@@ -437,6 +442,7 @@ let getFavBlogs = async (id) => {
 
 
 }
+
 // get all bookmarks
 let getbookMarkBlogs = async (id) => {
 
@@ -661,6 +667,4 @@ module.exports = {
 
 
 };
-
-
 
