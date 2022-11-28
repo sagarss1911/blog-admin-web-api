@@ -16,7 +16,7 @@ let addContributor = async (body) => {
        if (body._id) {
               let findData = { contributor: true }
               if (body.string === 'accept') {
-                     // let saveContributor = await contributtors(data).save();
+
                      let confirmContributor = await contributtors
                             .updateOne({ _id: body._id }, { $set: findData })
                             .exec();
