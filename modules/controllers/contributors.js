@@ -15,7 +15,7 @@ let addContribuor = (req, res, next) => {
 }
 
 let getContributtors = (req, res, next) => {
-       console.log("controller");
+
        return contributors
               .getContributtors()
               .then(data => {

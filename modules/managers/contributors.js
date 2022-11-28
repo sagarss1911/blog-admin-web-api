@@ -12,7 +12,7 @@ let _ = require("lodash"),
 
 // for adding blogs
 let addContributor = async (body) => {
-       console.log(body, "hgfhgfh");
+
        if (body._id) {
               let findData = { contributor: true }
               if (body.string === 'accept') {
@@ -20,12 +20,12 @@ let addContributor = async (body) => {
                      let confirmContributor = await contributtors
                             .updateOne({ _id: body._id }, { $set: findData })
                             .exec();
-                     console.log(confirmContributor);
+
               } else {
                      let confirmContributor = await contributtors
                             .deleteOne({ _id: body._id })
                             .exec();
-                     console.log(confirmContributor);
+
               }
        } else {
               let data = {
@@ -45,7 +45,7 @@ let addContributor = async (body) => {
 }
 
 let getContributtors = async () => {
-       console.log("afreen");
+
        let findAll = await contributtors.aggregate([
 
 
@@ -81,10 +81,10 @@ let getContributtors = async () => {
 
               });
        });
-       console.log(findAll);
+
 
        let find = await users.find()
-       console.log(find);
+
        return findAll;
 }
 

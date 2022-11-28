@@ -43,7 +43,7 @@ let addBlogs = async (req) => {
 
        }
        if (!body._id) {
-              console.log(req.body, "noId");
+           
               if (!req.files.image || !req.files.image.length > 0) {
                      throw new BadRequestError('please choose image ');
               }
@@ -75,7 +75,7 @@ let addBlogs = async (req) => {
 }
 // get blog by Id
 let getBlogs = async (id) => {
-       console.log(id);
+      
        let findData = { _id: ObjectId(id) };
        let allBlogs = await blogModel
               .aggregate([
@@ -451,7 +451,7 @@ let addBookmark = async (body) => {
 let getFavBlogs = async (id) => {
 
        let findblog = await favBlogs.find({ userId: ObjectId(id) })
-       console.log(findblog);
+ 
        let blogid = []
        findblog.forEach(element => {
               blogid.push(element.blogId)
@@ -459,7 +459,7 @@ let getFavBlogs = async (id) => {
 
 
        });
-       console.log(blogid);
+  
        let allblogs = await favBlogs.aggregate([
               // { $match: findData 
 
@@ -487,7 +487,7 @@ let getFavBlogs = async (id) => {
 
        ]).exec()
 
-       console.log(allblogs);
+     
        let data = []
 
        allblogs.forEach(element => {
@@ -516,7 +516,7 @@ let getFavBlogs = async (id) => {
 let getbookMarkBlogs = async (id) => {
 
        let findblog = await bookMark.find({ userId: ObjectId(id) })
-       console.log(findblog);
+      
        let blogid = []
        findblog.forEach(element => {
               blogid.push(element.blogId)
