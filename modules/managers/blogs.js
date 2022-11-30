@@ -1,5 +1,5 @@
 'use strict';
-
+// blogs manager
 
 let _ = require("lodash"),
        config = process.config.global_config,
@@ -13,7 +13,7 @@ let _ = require("lodash"),
 
 // for adding blogs
 let addBlogs = async (req) => {
-       console.log(req.body, "hgfhgfh");
+
        let image;
        let Blog;
        let body = req.body.body ? JSON.parse(req.body.body) : req.body;
@@ -43,7 +43,7 @@ let addBlogs = async (req) => {
 
        }
        if (!body._id) {
-           
+
               if (!req.files.image || !req.files.image.length > 0) {
                      throw new BadRequestError('please choose image ');
               }
@@ -75,7 +75,7 @@ let addBlogs = async (req) => {
 }
 // get blog by Id
 let getBlogs = async (id) => {
-      
+
        let findData = { _id: ObjectId(id) };
        let allBlogs = await blogModel
               .aggregate([
@@ -83,7 +83,7 @@ let getBlogs = async (id) => {
 
                      {
                             $lookup: {
-                                   from: "subscriber",
+                                   from: "user_register",
                                    let: { createdBy_id: "$createdBy" },
                                    pipeline: [
                                           {
@@ -91,13 +91,13 @@ let getBlogs = async (id) => {
                                                         $expr: { $eq: ["$_id", "$$createdBy_id"] }
                                                  }
                                           },
-                                          { $project: { subscriberName: 1, profileImage: 1 } }
+                                          { $project: { firstName: 1, lastName: 1, profileImage: 1 } }
                                    ],
                                    as: "createdBy"
                             }
                      }, {
                             $lookup: {
-                                   from: "subscriber",
+                                   from: "user_register",
                                    let: { imageBy_id: "$imageBy" },
                                    pipeline: [
                                           {
@@ -105,13 +105,13 @@ let getBlogs = async (id) => {
                                                         $expr: { $eq: ["$_id", "$$imageBy_id"] }
                                                  }
                                           },
-                                          { $project: { subscriberName: 1, profileImage: 1 } }
+                                          { $project: { firstName: 1, lastName: 1, profileImage: 1 } }
                                    ],
                                    as: "imageBy"
                             }
                      }, {
                             $lookup: {
-                                   from: "subscriber",
+                                   from: "user_register",
                                    let: {
                                           wordsBy_id: "$wordsBy"
                                    },
@@ -121,7 +121,7 @@ let getBlogs = async (id) => {
                                                         $expr: { $eq: ["$_id", "$$wordsBy_id"] }
                                                  }
                                           },
-                                          { $project: { subscriberName: 1, profileImage: 1 } }
+                                          { $project: { firstName: 1, lastName: 1, profileImage: 1 } }
                                    ],
                                    as: "wordsBy"
                             }
@@ -153,18 +153,19 @@ let getBlogs = async (id) => {
 
               // blog wordsBy user Image
               element.wordsBy.forEach(element => {
-                     element.profileImage = config.upload_folder + config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
+                     element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
               });
 
               // blog bublished user Image
               element.createdBy.forEach(element => {
-                     element.profileImage = config.upload_folder + config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
+                     element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
               });
 
               // blog imageBy user Image
               element.imageBy.forEach(element => {
-                     element.profileImage = config.upload_folder + config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
+                     element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
               });
+
        });
        return allBlogs[0];
 }
@@ -203,7 +204,7 @@ let getAllBlogs = async (body) => {
               { $limit: limit },
               {
                      $lookup: {
-                            from: "subscriber",
+                            from: "user_register",
                             let: { createdBy_id: "$createdBy" },
                             pipeline: [
                                    {
@@ -211,13 +212,13 @@ let getAllBlogs = async (body) => {
                                                  $expr: { $eq: ["$_id", "$$createdBy_id"] }
                                           }
                                    },
-                                   { $project: { subscriberName: 1 } }
+                                   { $project: { firstName: 1, lastName: 1 } }
                             ],
                             as: "createdBy"
                      }
               }, {
                      $lookup: {
-                            from: "subscriber",
+                            from: "user_register",
                             let: { imageBy_id: "$imageBy" },
                             pipeline: [
                                    {
@@ -225,13 +226,13 @@ let getAllBlogs = async (body) => {
                                                  $expr: { $eq: ["$_id", "$$imageBy_id"] }
                                           }
                                    },
-                                   { $project: { subscriberName: 1 } }
+                                   { $project: { firstName: 1, lastName: 1 } }
                             ],
                             as: "imageBy"
                      }
               }, {
                      $lookup: {
-                            from: "subscriber",
+                            from: "user_register",
                             let: {
                                    wordsBy_id: "$wordsBy"
                             },
@@ -241,7 +242,7 @@ let getAllBlogs = async (body) => {
                                                  $expr: { $eq: ["$_id", "$$wordsBy_id"] }
                                           }
                                    },
-                                   { $project: { subscriberName: 1 } }
+                                   { $project: { firstName: 1, lastName: 1 } }
                             ],
                             as: "wordsBy"
                      }
@@ -314,7 +315,7 @@ let getAllBlogs = async (body) => {
        });
 
 
-       let allblog = await bookMark.aggregate([
+       let allblog = await favBlogs.aggregate([
               // { $match: findData 
               { "$unwind": "$blogId" },
               {
@@ -451,7 +452,7 @@ let addBookmark = async (body) => {
 let getFavBlogs = async (id) => {
 
        let findblog = await favBlogs.find({ userId: ObjectId(id) })
- 
+
        let blogid = []
        findblog.forEach(element => {
               blogid.push(element.blogId)
@@ -459,7 +460,7 @@ let getFavBlogs = async (id) => {
 
 
        });
-  
+
        let allblogs = await favBlogs.aggregate([
               // { $match: findData 
 
@@ -487,7 +488,7 @@ let getFavBlogs = async (id) => {
 
        ]).exec()
 
-     
+
        let data = []
 
        allblogs.forEach(element => {
@@ -516,7 +517,7 @@ let getFavBlogs = async (id) => {
 let getbookMarkBlogs = async (id) => {
 
        let findblog = await bookMark.find({ userId: ObjectId(id) })
-      
+
        let blogid = []
        findblog.forEach(element => {
               blogid.push(element.blogId)
