@@ -1,5 +1,5 @@
 'use strict';
-
+// blogs manager
 
 let _ = require("lodash"),
        config = process.config.global_config,
