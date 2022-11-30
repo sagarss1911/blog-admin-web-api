@@ -7,20 +7,23 @@ let _ = require("lodash"),
        users = require('../models/user_register'),
        contributtors = require('../models/contributor'),
        admin = require('../models/admin'),
+
        ObjectId = require('mongoose').Types.ObjectId;
 
 
 // for adding blogs
 let addContributor = async (body) => {
+       console.log(body);
 
        if (body._id) {
-              let findData = { contributor: true }
+              let findData = { contributor: true, }
               if (body.string === 'accept') {
 
                      let confirmContributor = await contributtors
                             .updateOne({ _id: body._id }, { $set: findData })
                             .exec();
-
+                     let userAsContributtor = await users.updateOne({ _id: body.userId }, { $set: findData }).exec();
+                     console.log(confirmContributor, userAsContributtor);
               } else {
                      let confirmContributor = await contributtors
                             .deleteOne({ _id: body._id })
@@ -83,9 +86,19 @@ let getContributtors = async () => {
        });
 
 
-       let find = await users.find()
+       let find = await contributtors.count({ contributor: false })
+       console.log(find);
 
-       return findAll;
+
+
+       let _result = { total_count: 0 };
+       _result.findAll = findAll;
+       _result.requestCount = find;
+
+       return _result;
+
+
+
 }
 
 
@@ -103,5 +116,6 @@ let getContributtors = async () => {
 
 module.exports = {
        addContributor,
-       getContributtors
+       getContributtors,
+
 }

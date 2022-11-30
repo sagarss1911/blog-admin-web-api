@@ -86,14 +86,14 @@ let getUser = async (id) => {
 let getAllUser = async (body) => {
 
     let findData = {};
-    allUsers = await UserRegisterModal.find(findData)
+    let allUsers = await UserRegisterModal.find(findData)
         .exec()
     allUsers.forEach(element => {
         element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
         element.coverImage = config.upload_folder + config.upload_entities.user_image_folder + element.coverImage;;
 
     });
-
+    console.log(allUsers, "users");
     let totalRecords = await UserRegisterModal.countDocuments(findData);
 
     let _result = { total_count: 0 };
