@@ -13,7 +13,7 @@ let _ = require("lodash"),
 
 // for adding blogs
 let addContributor = async (body) => {
-       console.log(body);
+
 
        if (body._id) {
               let findData = { contributor: true, }
@@ -23,7 +23,7 @@ let addContributor = async (body) => {
                             .updateOne({ _id: body._id }, { $set: findData })
                             .exec();
                      let userAsContributtor = await users.updateOne({ _id: body.userId }, { $set: findData }).exec();
-                     console.log(confirmContributor, userAsContributtor);
+
               } else {
                      let confirmContributor = await contributtors
                             .deleteOne({ _id: body._id })
@@ -87,7 +87,7 @@ let getContributtors = async () => {
 
 
        let find = await contributtors.count({ contributor: false })
-       console.log(find);
+
 
 
 

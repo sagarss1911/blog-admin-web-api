@@ -13,7 +13,7 @@ let _ = require("lodash"),
 
 // for adding blogs
 let addBlogs = async (req) => {
-       console.log(req.body, "hgfhgfh");
+
        let image;
        let Blog;
        let body = req.body.body ? JSON.parse(req.body.body) : req.body;
@@ -153,18 +153,19 @@ let getBlogs = async (id) => {
 
               // blog wordsBy user Image
               element.wordsBy.forEach(element => {
-                     element.profileImage = config.upload_folder + config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
+                     element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
               });
 
               // blog bublished user Image
               element.createdBy.forEach(element => {
-                     element.profileImage = config.upload_folder + config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
+                     element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
               });
 
               // blog imageBy user Image
               element.imageBy.forEach(element => {
-                     element.profileImage = config.upload_folder + config.upload_folder + config.upload_entities.subscriber_image_folder + element.profileImage;
+                     element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
               });
+
        });
        return allBlogs[0];
 }
@@ -347,7 +348,7 @@ let getAllBlogs = async (body) => {
 
        });
 
-       console.log(allblogs, "blogs");
+
 
 
        let totalRecords = await blogModel.countDocuments(findData);
