@@ -93,7 +93,7 @@ let getAllUser = async (body) => {
         element.coverImage = config.upload_folder + config.upload_entities.user_image_folder + element.coverImage;;
 
     });
-
+    console.log(allUsers, "users");
     let totalRecords = await UserRegisterModal.countDocuments(findData);
 
     let _result = { total_count: 0 };
