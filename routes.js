@@ -28,11 +28,16 @@ module.exports = app => {
     app.use('/api/change_icon', require('./modules/routes/change_icon'));
 
     app.use('/api/journey', require('./modules/routes/journey'));
+
+    app.use('/api/website_footer', require('./modules/routes/website_footer'));
+
+    app.use('/api/website_header', require('./modules/routes/website_header'));
+
     app.use('/api/contributors', require('./modules/routes/contributors'));
 
 
     app.use((req, res, next) => {
-        console.log("Request", req.url)
+
         next();
     });
 

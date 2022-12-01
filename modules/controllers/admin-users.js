@@ -33,7 +33,7 @@ let manager = require('../managers/admin-users')
  *                 example: 0
  *     responses:
  *       200:
- *         description: place object
+ *         description: user object
  *         content:
  *           application/json:
  *             schema:

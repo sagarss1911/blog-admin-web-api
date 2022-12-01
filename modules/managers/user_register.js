@@ -5,6 +5,7 @@ let _ = require("lodash"),
     config = process.config.global_config,
 
     UserRegisterModal = require('../models/user_register'),
+    UsersModal = require('../models/admin'),
 
     BadRequestError = require('../errors/badRequestError'),
 
@@ -41,7 +42,6 @@ let updateUser = async (req) => {
     let updateData;
     let body = req.body.body ? JSON.parse(req.body.body) : req.body;
 
-
     updateData = {
         firstName: body.firstName,
         lastName: body.lastName,
@@ -66,11 +66,11 @@ let updateUser = async (req) => {
 
 }
 
-let getUser = async (id) => {
-    let findData = { _id: ObjectId(id) };
-    let allUsers = await UserRegisterModal.find(findData)
-        // allUsers = await UsersModal.find(findData)
-        .exec()
+let getUser = async (user) => {
+    let findData = { _id: user._id };
+    // let allUsers = await UsersModal.find(findData).exec()
+    let allUsers = await UserRegisterModal.find(findData).exec();
+
     allUsers.forEach(element => {
         element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
         element.coverImage = config.upload_folder + config.upload_entities.user_image_folder + element.coverImage;
@@ -86,7 +86,7 @@ let getUser = async (id) => {
 let getAllUser = async (body) => {
 
     let findData = {};
-    allUsers = await UserRegisterModal.find(findData)
+    let allUsers = await UserRegisterModal.find(findData)
         .exec()
     allUsers.forEach(element => {
         element.profileImage = config.upload_folder + config.upload_entities.user_image_folder + element.profileImage;
