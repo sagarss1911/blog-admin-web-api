@@ -421,11 +421,9 @@ let addBookmark = async (body) => {
 
 
 
-
        let Blog;
 
        let findblog = await bookMark.findOne({ blogId: ObjectId(body.blogId), userId: ObjectId(body.userId) })
-
 
 
        if (findblog) {

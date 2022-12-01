@@ -3,8 +3,6 @@
 let UserManager = require('../managers/user_register');
 
 let userRegister = (req, res, next) => {
-    console.log('c');
-
     return UserManager
         .userRegister(req.body)
         .then(data => {
@@ -32,9 +30,8 @@ let updateUser = (req, res, next) => {
 }
 
 let getUser = (req, res, next) => {
-    // console.log('get user controller');
     return UserManager
-        .getUser(req.params.id)
+        .getUser(req.user)
         .then(data => {
             let result = {
                 status: 200,
