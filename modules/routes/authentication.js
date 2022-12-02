@@ -6,7 +6,7 @@ let express = require("express"),
     authMiddleware = require("../middleware/authValidation");
 
 router.post("/login", controller.login);
-router.post("/logout", authMiddleware.verifyToken, controller.logOut);
+router.post("/logout", authMiddleware.verifyUserByIdToken, controller.logOut);
 
 
 module.exports = router;
