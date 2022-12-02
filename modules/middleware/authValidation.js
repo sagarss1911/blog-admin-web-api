@@ -64,28 +64,34 @@ let verifyUserToken = async (req, res, next) => {
 		});
 
 	}
-	let user;
-	user = await UsersModel
+	let user = await UsersModel
 		.findOne({ fpToken: token })
 		.select()
 		.lean()
 		.exec();
-	user = await UserRegisterModal
+	let admin = await UserRegisterModal
 		.findOne({ fpToken: token })
 		.select()
 		.lean()
 		.exec();
-
-	if (!user) {
+	if (!user && !admin) {
 		return res.json({
 			status: 400,
 			data: { msg: "You are not authorized." }
 		})
 	} else {
-		req.user = {
-			_id: user._id,
-			email: user.email
-		};
+		if (user) {
+			req.user = {
+				_id: user._id,
+				email: user.email
+			};
+		}
+		if (admin) {
+			req.user = {
+				_id: admin._id,
+				email: admin.email
+			};
+		}
 		next();
 	}
 }

@@ -88,7 +88,7 @@ let addHeaderSubHeading = async (req) => {
     let websiteData,
         websiteHeadingData;
     let body = req.body.body ? JSON.parse(req.body.body) : req.body;
-    ['subHeading', 'description'].forEach(x => {
+    ['subHeading', 'description', 'mainheading'].forEach(x => {
         if (!body[x]) {
             throw new BadRequestError(x + " is required");
         }
@@ -159,56 +159,16 @@ let deleteSubHeader = async (subheader_id) => {
         .exec();
 }
 
-
-// schema:
-
-// country: id, name
-// state: id, name, countryId
-
-// db.getCollection('state').aggregate([
-//     {
-//         $lookup: {
-//             from: "country", //jis table me tumhe data find karna hain
-//             let: { countryId: "$countryId" }, //tumhare table me reference key kya hain wo "" ke ander jayega and wo value uske aage wale ko assign hoga in this case  countryId
-//             pipeline: [
-//                 {
-//                     $match: {
-//                         $expr: { $eq: ["$_id", "$$countryId"] }  // equal check karna hain _id parent table ka id,$$tumhara local variable
-//                     }
-//                 },
-//                 { $project: { name: 1 } } // fields you want to show
-//             ],
-//             as: "parentCountry" // tag in which you want data
-//         }
-//     }
-// ])
-
-
-
-//Get all categories list
+//Get all main headings 
 let getMainHeader = async (body) => {
-    let mainHeader = await headerMainheadingModel.aggregate(
-        [
-            {
-                $lookup: {
-                    from: "headerMainheadingModel",
-                    let: { myid: "$mainheading" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$_id", "$$myid"] }
-                            }
-                        },
-                        { $project: { _id: 1 } }
-                    ],
-                    as: "mainheading"
-                }
-            },
-        ])
+    let findData = {};
+    let websiteHeader = await headerMainheadingModel
+        .find(findData)
+        .lean()
         .exec()
+    console.log(websiteHeader);
+    return websiteHeader;
 
-
-    return mainHeader;
 }
 
 

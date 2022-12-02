@@ -4,7 +4,7 @@ let mongoose = require("../helpers/asf_mongodb"),
 
 let tempSchema = new Schema({
     subHeading: { type: String, required: true },
-    mainheading: Schema.ObjectId,
+    mainheading: { type: String, required: true },
     description: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
