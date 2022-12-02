@@ -13,6 +13,7 @@ let _ = require("lodash"),
 
 // for adding blogs
 let addBlogs = async (req) => {
+
        let image;
        let Blog;
        let body = req.body.body ? JSON.parse(req.body.body) : req.body;
