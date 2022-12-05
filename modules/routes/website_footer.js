@@ -17,7 +17,7 @@ router.delete('/delete_footer_link/:Link_id', authMiddleware.verifyToken, contro
 
 
 //footer headings
-router.post('/get_footer_headings', authMiddleware.verifyToken, controller.getFooterHeading);
+router.post('/get_footer_headings', controller.getFooterHeading);
 
 router.get('/get_footer_headings_details/:heading_id', authMiddleware.verifyToken, controller.getFooterHeadingDetails);
 

@@ -20,6 +20,13 @@ router.post('/update_password', controller.updatePassword)
 
 router.delete('/remove_user/:user_id', authMiddleware.verifyUserByIdToken, controller.removeUser);
 
+
+//contact us
+
+router.post('/add_user_contactus', controller.userRegisterContactUs);
+
+router.post('/get_all_contactususer', controller.getContactUsDetail);
+
 module.exports = router;
 
 
