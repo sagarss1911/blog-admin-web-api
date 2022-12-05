@@ -166,7 +166,6 @@ let getMainHeader = async (body) => {
         .find(findData)
         .lean()
         .exec()
-    console.log(websiteHeader);
     return websiteHeader;
 
 }

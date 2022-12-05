@@ -80,11 +80,41 @@ let removeUser = (req, res, next) => {
         })
         .catch(next);
 }
+
+
+let userRegisterContactUs = (req, res, next) => {
+    return UserManager
+        .userRegisterContactUs(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
+let getContactUsDetail = (req, res, next) => {
+    return UserManager
+        .getContactUsDetail(req.body)
+        .then(data => {
+            let result = {
+                status: 200,
+                data: data
+            }
+            return res.json(result);
+        })
+        .catch(next);
+}
+
 module.exports = {
     userRegister: userRegister,
     updateUser: updateUser,
     getUser: getUser,
     getAllUser: getAllUser,
     updatePassword: updatePassword,
-    removeUser: removeUser
+    removeUser: removeUser,
+    userRegisterContactUs: userRegisterContactUs,
+    getContactUsDetail: getContactUsDetail
 }

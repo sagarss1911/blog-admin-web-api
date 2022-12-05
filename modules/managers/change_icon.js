@@ -11,17 +11,9 @@ let addIcon = async (req) => {
         iconData,
         Icon;
     let body = req.body.body ? JSON.parse(req.body.body) : req.body;
-
-    let checklogo = await ChangeIconModal.find()
-
-    // if (checklogo != '') {
-    //     throw new BadRequestError("Cant have multiple logos")
-
-    // }
-
     if (!body._id) {
-        let findEmail = await ChangeIconModal.findOne()
-        if (findEmail) { throw new BadRequestError("Email Already Exists!") }
+        let findIcons = await ChangeIconModal.findOne()
+        if (findIcons) { throw new BadRequestError("Icons Already Exists!") }
         if (!req.files.image || !req.files.image.length > 0 || !req.files.logoImage || !req.files.logoImage.length > 0) {
             throw new BadRequestError('please choose image for both place and logo image');
         }
